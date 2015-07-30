@@ -204,21 +204,12 @@ class TacytAuth(object):
 
         utc = utc.strip()
 
-        #logging.debug(http_method)
-        #logging.debug(query_string)
-        #logging.debug(utc)
-
-
 
         string_to_sign = (http_method.upper().strip() + "\n" +
                           utc + "\n" +
                           self.get_serialized_headers(x_headers) + "\n" +
                           query_string.strip())
 
-
-        #if params is not None:
-            #string_to_sign = string_to_sign + "\n" + self.get_serialized_params(params)
-            #string_to_sign = string_to_sign + "\n" + str(params).strip()
 
         authorization_header = (TacytAuth.AUTHORIZATION_METHOD + TacytAuth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
                                 self.appId + TacytAuth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
@@ -233,9 +224,7 @@ class TacytAuth(object):
 
 
     def authentication_headers_with_body(self, http_method, query_string, x_headers=None, body=None, utc=None):
-        """
 
-        """
         body_hash = None
         if body is not None:
             body_hash = hashlib.sha1(str(body)).hexdigest()
@@ -253,7 +242,6 @@ class TacytAuth(object):
                           self.get_serialized_headers(x_headers) + "\n" +
                           query_string.strip())
 
-        #not params
 
         authorization_header = (TacytAuth.AUTHORIZATION_METHOD + TacytAuth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
                                 self.appId + TacytAuth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
@@ -292,10 +280,7 @@ class TacytAuth(object):
             return ""
 
     def get_serialized_params(self, params):
-        """
 
-        @params
-        """
         try:
             # Try to use the new Python3 HTTP library if available
             import http.client as http

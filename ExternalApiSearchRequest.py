@@ -5,9 +5,9 @@ This library offers an API to use Tacyt in a python environment.
 Copyright (C) 2015 Eleven Paths
 '''
 
-from tacyt.ExternalApiRequest import ExternalApiRequest
+from ExternalApiRequest import ExternalApiRequest
 from cStringIO import StringIO
-from Error import Error
+import Error
 import json
 
 class StringBuilder():
@@ -42,14 +42,14 @@ class ExternalApiSearchRequest(ExternalApiRequest):
         if (outputFields != None and len(outputFields) > 0):
             string_builder = StringBuilder()
             for field in outputFields:
-                string_builder.append(field)
+                string_builder.append(field + ",")
 
             outputFields = str(string_builder)
 
-        grouped = False
+        self.grouped = grouped
         self.query = query
 
-    def get_json_encode(self):
+    def get_json_encode_for_search(self):
 
         json_data = dict()
         if self.query is not None:
@@ -64,38 +64,3 @@ class ExternalApiSearchRequest(ExternalApiRequest):
             json_data["grouped"] = self.grouped
 
         return json_data
-
-    def get_from_json(self, json):
-        json_object = json.loads(json)
-        if "data" in json_object:
-            self.data = json_object["data"]
-            return self.data
-        else:
-            self.data = ""
-            return self.data
-
-        if "error" in json_object:
-            self.error = Error(json_object["error"])
-            return self.error
-        else:
-            self.error = ""
-            return self.error
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

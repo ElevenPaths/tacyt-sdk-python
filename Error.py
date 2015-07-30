@@ -12,9 +12,6 @@ import json
 class Error(object):
 
     def __init__(self, json_data):
-        '''
-        Constructor
-        '''
 
         self.code = json_data['code']
         self.message = json_data['message']

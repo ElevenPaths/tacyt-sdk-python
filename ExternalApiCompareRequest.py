@@ -5,7 +5,7 @@ This library offers an API to use Tacyt in a python environment.
 Copyright (C) 2015 Eleven Paths
 '''
 
-from tacyt.ExternalApiRequest import ExternalApiRequest
+from ExternalApiRequest import ExternalApiRequest
 
 class ExternalApiCompareRequest(ExternalApiRequest):
 
@@ -20,14 +20,7 @@ class ExternalApiCompareRequest(ExternalApiRequest):
         self.apps = apps
         self.include_details = include_details
 
-
-    def get_apps(self):
-        return self.apps
-
-    def is_include_details(self):
-        self.include_details
-
-    def get_json_encode(self):
+    def get_json_encode_for_compare_apps(self):
         json_data = dict()
         if self.apps is not None:
             json_data["apps"] = self.apps
@@ -35,16 +28,3 @@ class ExternalApiCompareRequest(ExternalApiRequest):
             json_data["includeDetails"] = self.include_details
 
         return json_data
-
-
-
-
-
-
-
-
-
-
-
-
-

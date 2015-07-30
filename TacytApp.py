@@ -30,100 +30,189 @@ class TacytApp(TacytAuth):
 
 
     def search_apps(self, query, numberPage, maxResults):
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
         result = ExternalApiSearchRequest(query, numberPage, maxResults)
-        return self._http("POST", self.API_SEARCH_URL, None, result.get_json_encode())
+        return self._http("POST", self.API_SEARCH_URL, None, result.get_json_encode_for_search())
 
     def get_app_details(self, key):
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
         return self._http("GET", self.API_DETAILS_URL + "/" + key)
 
     def list_tags(self):
-        request = ExternalApiTagRequest.enmRequestType.LIST
-        result = ExternalApiTagRequest(request, None, None)
-        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict())
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiTagRequest(ExternalApiTagRequest.LIST_REQUEST, None, None)
+        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict_for_tag_based_requests())
 
     def assign_tag(self, tag, app_keys):
-        request = ExternalApiTagRequest.enmRequestType.CREATE
-        result = ExternalApiTagRequest(request, tag, app_keys)
-        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict())
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiTagRequest(ExternalApiTagRequest.CREATE_REQUEST, tag, app_keys)
+        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict_for_tag_based_requests())
 
     def remove_tag_for_apps(self, tag, app_keys):
-        request = ExternalApiTagRequest.enmRequestType.REMOVE
-        result = ExternalApiTagRequest(request, tag, app_keys)
-        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict())
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiTagRequest(ExternalApiTagRequest.REMOVE_REQUEST, tag, app_keys)
+        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict_for_tag_based_requests())
 
     def delete_tag(self, tag):
-        request = ExternalApiTagRequest.enmRequestType.REMOVE_ALL
-        result = ExternalApiTagRequest(request, tag, None)
-        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict())
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiTagRequest(ExternalApiTagRequest.REMOVE_ALL_REQUEST, tag, None)
+        return self._http("POST", self.API_TAGS_URL, None, result.get_json_encode_dict_for_tag_based_requests())
 
     def create_filter(self, filter):
-        request = ExternalApiFilterRequest.request_type.CREATE
-        result = ExternalApiFilterRequest(request, filter, None)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.CREATE_REQUEST, filter, None)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_for_filter_based_requests())
 
     def update_filter(self, filter):
-        request = ExternalApiFilterRequest.request_type.UPDATE
-        result = ExternalApiFilterRequest(request, filter, None)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UPDATE_REQUEST, filter, None)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_for_filter_based_requests())
 
     def read_all_filters(self):
-        request = ExternalApiFilterRequest.request_type.READ
-        result = ExternalApiFilterRequest(request, None, None)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.READ_REQUEST, None, None)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_for_filter_based_requests())
 
     def read_one_filter(self, filter_id):
-        request = ExternalApiFilterRequest.request_type.READ
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
         filter = Filter(filter_id)
-        result = ExternalApiFilterRequest(request, filter, None)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.READ_REQUEST, filter, None)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_for_filter_based_requests())
 
     def delete_filter(self, filter_id):
-        request = ExternalApiFilterRequest.request_type.DELETE
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
         filter = Filter(filter_id)
-        result = ExternalApiFilterRequest(request, filter)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.DELETE_REQUEST, filter)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_for_filter_based_requests())
 
     def search_public_filter(self, query, page):
-        request = ExternalApiFilterRequest.request_type.SEARCH_PUBLIC_FILTER
-        result = ExternalApiFilterRequest(request, query, page)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_aux)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SEARCH_PUBLIC_FILTER_REQUEST, query, page)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def list_detected_apps(self, filter_id, page):
-        request = ExternalApiFilterRequest.request_type.LIST_DETECTIONS
-        result = ExternalApiFilterRequest(request, filter_id, page)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_aux)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.LIST_DETECTIONS_REQUEST, filter_id, page)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def un_subscribe_public_filter(self, filter_id):
-        request = ExternalApiFilterRequest.request_type.UNSUBSCRIBE
-        result = ExternalApiFilterRequest(request, filter_id)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_aux)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UNSUBSCRIBE_REQUEST, filter_id)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def subscribe_public_filter(self, filter_id):
-        request = ExternalApiFilterRequest.request_type.SUBSCRIBE
-        result = ExternalApiFilterRequest(request, filter_id)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_aux)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SUBSCRIBE_REQUEST, filter_id)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def get_RSS_info(self, filter_id):
-        request = ExternalApiFilterRequest.request_type.GET_RSS
-        result = ExternalApiFilterRequest(request, filter_id)
-        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_aux)
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.GET_RSS_REQUEST, filter_id)
+        return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def compare_apps(self, apps, include_details):
+        '''
++        The custom header consists of three parts, the method, the appId and the signature.
++        This method returns the specified part if it exists.
++        @param $part The zero indexed part to be returned
++        @param $header The HTTP header value from which to extract the part
++        @return string the specified part from the header or an empty string if not existent
++        '''
         result = ExternalApiCompareRequest(apps, include_details)
-        return self._http("POST", self.API_COMPARER_URL, None, result.get_json_encode())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return self._http("POST", self.API_COMPARER_URL, None, result.get_json_encode_for_compare_apps())

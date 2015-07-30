@@ -1,4 +1,3 @@
-__author__ = 'ruben.moreno'
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
@@ -6,7 +5,7 @@ This library offers an API to use Tacyt in a python environment.
 Copyright (C) 2015 Eleven Paths
 '''
 
-from tacyt.ExternalApiRequest import ExternalApiRequest
+from ExternalApiRequest import ExternalApiRequest
 
 try:
     import simplejson as json
@@ -21,31 +20,21 @@ class ExternalApiTagRequest(ExternalApiRequest):
 
     FIELD_TAGS = "tags"
 
-    class enmRequestType():
-        LIST = "LIST"
-        CREATE = "CREATE"
-        REMOVE = "REMOVE"
-        REMOVE_ALL = "REMOVE_ALL"
+    LIST_REQUEST = "LIST"
+    CREATE_REQUEST = "CREATE"
+    REMOVE_REQUEST = "REMOVE"
+    REMOVE_ALL_REQUEST = "REMOVE_ALL"
 
-    request_type = enmRequestType()
+    request_type = None
     tag = None
     apps = []
 
-    def enm_request_type(self):
-        return self.request_type
-
-    def get_tag(self):
-        return self.tag
-
-    def get_apps(self):
-        return self.apps
-
-    def __init__(self, request_type, tag, apps):
+    def __init__(self, request_type=None, tag=None, apps=None):
         self.request_type = request_type
         self.tag = tag
         self.apps = apps
 
-    def get_json_encode_dict(self):
+    def get_json_encode_dict_for_tag_based_requests(self):
         json_obj = dict()
         if self.request_type is not None:
             json_obj["requestType"] = self.request_type
@@ -58,31 +47,4 @@ class ExternalApiTagRequest(ExternalApiRequest):
 
     def get_json_encode_string(self):
 
-        return json_encode(self.get_json_encode_dict())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return json_encode(self.get_json_encode_dict_for_tag_based_requests())
