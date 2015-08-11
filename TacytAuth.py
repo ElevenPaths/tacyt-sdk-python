@@ -267,7 +267,6 @@ class TacytAuth(object):
         '''
         if x_headers:
             headers = dict((k.lower(), v) for k, v in x_headers.iteritems())
-            #headers.sort()
             serialized_headers = ""
             for key, value in headers.iteritems():
                 if not key.startswith(TacytAuth.X_11PATHS_HEADER_PREFIX.lower()):

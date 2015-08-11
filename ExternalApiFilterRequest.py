@@ -41,13 +41,15 @@ class ExternalApiFilterRequest(ExternalApiRequest):
     LIST_DETECTIONS_REQUEST = "LIST_DETECTIONS"
 
     request_type = None
-    filter = None
+    content = None
     page = None
+    filter = None
 
-    def __init__(self, request_type=None, filter=None, page=None):
+    def __init__(self, request_type=None, content=None, page=None, filter=None):
         self.request_type = request_type
-        self.filter = filter
+        self.content = content
         self.page = page
+        self.filter = filter
 
     def get_json_encode_for_filter_based_requests(self):
         json_obj = dict()
@@ -55,19 +57,19 @@ class ExternalApiFilterRequest(ExternalApiRequest):
         if self.request_type is not None:
             json_obj = {"requestType": self.request_type}
 
-        if self.filter is not None:
+        if self.content is not None:
 
-            json_obj["filter"]= {"id": self.filter.id,
-                                "name": self.filter.name,
-                                "description": self.filter.description,
-                                "weight": self.filter.weight,
-                                "visibility": self.filter.visibility,
-                                "rules": self.filter.rules}
+            json_obj["filter"]= {"id": self.content.id,
+                                "name": self.content.name,
+                                "description": self.content.description,
+                                "weight": self.content.weight,
+                                "visibility": self.content.visibility,
+                                "rules": self.content.rules}
 
             content_rules = list()
 
-            if self.filter.rules is not None:
-                for rule in self.filter.rules:
+            if self.content.rules is not None:
+                for rule in self.content.rules:
                     content_rules.append({"weight": rule.weight, "content": rule.content})
 
                 json_obj["filter"]["rules"] = content_rules
@@ -81,8 +83,8 @@ class ExternalApiFilterRequest(ExternalApiRequest):
         if self.request_type is not None:
             json_obj["requestType"] = self.request_type
 
-        if self.filter is not None:
-            json_obj["content"] = self.filter
+        if self.content is not None:
+            json_obj["content"] = self.content
 
         if self.page is not None:
             json_obj["page"] = self.page

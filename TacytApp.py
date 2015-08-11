@@ -29,14 +29,14 @@ class TacytApp(TacytAuth):
         super(TacytApp, self).__init__(app_id, secret_key)
 
 
-    def search_apps(self, query, numberPage, maxResults):
+    def search_apps(self, query, numberPage, maxResults, outputFields, grouped):
         '''
 +        @param $query The query string will filter the search results.
 +        @param $numberPage A number greater or equal to 1 indicating the page of results which have to be retrieved. 
 		 @param $maxResults A number between 1 and 100 indicating the max number of apps which have to be retrieved.
 +        @return Json structure with the keys to the Applications found.
 +        '''
-        result = ExternalApiSearchRequest(query, numberPage, maxResults)
+        result = ExternalApiSearchRequest(query, numberPage, maxResults, outputFields, grouped)
         return self._http("POST", self.API_SEARCH_URL, None, result.get_json_encode_for_search())
 
     def get_app_details(self, key):
