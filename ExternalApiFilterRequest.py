@@ -45,7 +45,7 @@ class ExternalApiFilterRequest(ExternalApiRequest):
     page = None
     content = None
 
-    def __init__(self, request_type=None, content=None, page=None, filter=None):
+    def __init__(self, request_type=None, filter=None, page=None, content=None):
         self.request_type = request_type
         self.content = content
         self.page = page
