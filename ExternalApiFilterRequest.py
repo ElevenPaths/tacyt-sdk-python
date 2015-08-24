@@ -41,9 +41,9 @@ class ExternalApiFilterRequest(ExternalApiRequest):
     LIST_DETECTIONS_REQUEST = "LIST_DETECTIONS"
 
     request_type = None
-    content = None
-    page = None
     filter = None
+    page = None
+    content = None
 
     def __init__(self, request_type=None, content=None, page=None, filter=None):
         self.request_type = request_type
@@ -57,22 +57,22 @@ class ExternalApiFilterRequest(ExternalApiRequest):
         if self.request_type is not None:
             json_obj = {"requestType": self.request_type}
 
-        if self.content is not None:
+        if self.filter is not None:
 
-            json_obj["filter"]= {"id": self.content.id,
-                                "name": self.content.name,
-                                "description": self.content.description,
-                                "weight": self.content.weight,
-                                "visibility": self.content.visibility,
-                                "rules": self.content.rules}
+            json_obj["filter"]= {"id": self.filter.id,
+                                "name": self.filter.name,
+                                "description": self.filter.description,
+                                "weight": self.filter.weight,
+                                "visibility": self.filter.visibility,
+                                "rules": self.filter.rules}
 
-            content_rules = list()
+            filter_rules = list()
 
-            if self.content.rules is not None:
-                for rule in self.content.rules:
-                    content_rules.append({"weight": rule.weight, "content": rule.content})
+            if self.filter.rules is not None:
+                for rule in self.filter.rules:
+                    filter_rules.append({"weight": rule.weight, "content": rule.content})
 
-                json_obj["filter"]["rules"] = content_rules
+                json_obj["filter"]["rules"] = filter_rules
 
         return json_obj
 
@@ -83,8 +83,8 @@ class ExternalApiFilterRequest(ExternalApiRequest):
         if self.request_type is not None:
             json_obj["requestType"] = self.request_type
 
-        if self.content is not None:
-            json_obj["content"] = self.content
+        if self.filter is not None:
+            json_obj["content"] = self.filter
 
         if self.page is not None:
             json_obj["page"] = self.page
