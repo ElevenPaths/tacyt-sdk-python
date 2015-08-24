@@ -83,8 +83,8 @@ class ExternalApiFilterRequest(ExternalApiRequest):
         if self.request_type is not None:
             json_obj["requestType"] = self.request_type
 
-        if self.filter is not None:
-            json_obj["content"] = self.filter
+        if self.content is not None:
+            json_obj["content"] = self.content
 
         if self.page is not None:
             json_obj["page"] = self.page

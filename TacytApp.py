@@ -127,16 +127,15 @@ class TacytApp(TacytAuth):
 +        @param $page A number greater or equal to 1 indicating the page of results which have to be retrieved.
 +        @return A list of public filters(Visibility = Public)
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SEARCH_PUBLIC_FILTER_REQUEST, query, page)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SEARCH_PUBLIC_FILTER_REQUEST, None, page, query)
         return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
-    def list_detected_apps(self, filter_id, page):
+    def list_detected_apps(self, page,filter_id):
         '''
 +        @param $filter_id id to the filter.
-+        @param $page A number greater or equal to 1 indicating the page of results which have to be retrieved.
 +        @return Json structure with the details of applications detected by the filter.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.LIST_DETECTIONS_REQUEST, filter_id, page)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.LIST_DETECTIONS_REQUEST, None, page, filter_id)
         return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def un_subscribe_public_filter(self, filter_id):
@@ -144,7 +143,7 @@ class TacytApp(TacytAuth):
 +        With this method you can subscribe to filter.
 +        @param $filter_id id to filter you want subscribe.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UNSUBSCRIBE_REQUEST, filter_id)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UNSUBSCRIBE_REQUEST, None, None, filter_id)
         return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def subscribe_public_filter(self, filter_id):
@@ -152,7 +151,7 @@ class TacytApp(TacytAuth):
 		 With this method you can unsubscribe to filter.
 +        @param $filter_id id to filter you want unsubscribe.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SUBSCRIBE_REQUEST, filter_id)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SUBSCRIBE_REQUEST, None, None, filter_id)
         return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def get_RSS_info(self, filter_id):
@@ -160,7 +159,7 @@ class TacytApp(TacytAuth):
 +        This method get RSS information to a filter.
 +        @param $filter_id id to filter you want get RSS information.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.GET_RSS_REQUEST, filter_id)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.GET_RSS_REQUEST, None, None, filter_id)
         return self._http("POST", self.API_FILTERS_URL, None, result.get_json_encode_dict_filter_for_content_based_requests())
 
     def compare_apps(self, apps, include_details):
