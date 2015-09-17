@@ -6,7 +6,7 @@ Copyright (C) 2015 Eleven Paths
 '''
 
 from ExternalApiRequest import ExternalApiRequest
-import StringIO
+from cStringIO import StringIO
 import Error
 import json
 
@@ -21,19 +21,24 @@ class ExternalApiSearchRequest(ExternalApiRequest):
 
     def __init__(self, query=None, numberPage=None, maxResults=None, outputFields=None, grouped=None):
 
+        string_build = StringIO()
         if (numberPage <= 0):
-            numberPage = 1
+            self.numberPage = 1
+        else:
+            self.numberPage = numberPage
+
 
         if (maxResults <= 0):
-            maxResults = 20
+            self.maxResults = 20
+
+        else:
+            self.maxResults = maxResults
 
         if (outputFields != None and len(outputFields) > 0):
-            string_builder = StringIO.StringIO()
             for field in outputFields:
-                string_builder.write(field + ",")
+                string_build.write(field + ",")
 
-            outputFields = str(string_builder)
-
+        self.outputFields = string_build.getvalue()
         self.grouped = grouped
         self.query = query
 
