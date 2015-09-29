@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from ExternalApiFilterRequest import ExternalApiFilterRequest
-from ExternalApiTagRequest import ExternalApiTagRequest
-from ExternalApiCompareRequest import ExternalApiCompareRequest
-from ExternalApiSearchRequest import ExternalApiSearchRequest
-from Filter import Filter
-from Version import Version
-from authorization import Auth
+from externalapifilterrequest import ExternalApiFilterRequest
+from externalapitagrequest import ExternalApiTagRequest
+from externalapicomparerequest import ExternalApiCompareRequest
+from externalapisearchrequest import ExternalApiSearchRequest
+from filter import Filter
+from version import Version
+from authorization import auth
 try:
     import simplejson as json
 except ImportError:
@@ -17,7 +17,7 @@ json_encode = lambda x: json.dumps(x)
 json_decode = lambda x: json.loads(x)
 
 
-class TacytApp(Auth.Auth):
+class TacytApp(auth.Auth):
 
     API_SEARCH_URL = "/api/"+Version.API_VERSION+"/search"
     API_DETAILS_URL = "/api/"+Version.API_VERSION+"/details"
@@ -90,7 +90,7 @@ class TacytApp(Auth.Auth):
 +        This method create a filter.
 +        @param $filter Filter structure.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.CREATE_REQUEST, filter, None)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.CREATE_REQUEST, filter, 0, None)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_for_filter_based_requests())
 
     def update_filter(self, filter):
@@ -98,14 +98,14 @@ class TacytApp(Auth.Auth):
 +        This method update changes associates with a filter.
 +        @param $filter Filter structure.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UPDATE_REQUEST, filter, None)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UPDATE_REQUEST, filter, 0, None)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_for_filter_based_requests())
 
     def read_all_filters(self):
         '''
 +        @return a list of filters creates.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.READ_REQUEST, None, None)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.READ_REQUEST, None, 0, None)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_for_filter_based_requests())
 
     def read_one_filter(self, filter_id):
@@ -114,7 +114,7 @@ class TacytApp(Auth.Auth):
 +        @return This method returns the details of filter associate with this filter_id.
 +        '''
         filter = Filter(filter_id)
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.READ_REQUEST, filter, None)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.READ_REQUEST, filter, 0, None)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_for_filter_based_requests())
 
     def delete_filter(self, filter_id):
@@ -123,7 +123,7 @@ class TacytApp(Auth.Auth):
 +        @param $filter_id id of the filter you want to delete.
 +        '''
         filter = Filter(filter_id)
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.DELETE_REQUEST, filter)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.DELETE_REQUEST, filter, 0, None)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_for_filter_based_requests())
 
     def search_public_filter(self, query, page):
@@ -148,7 +148,7 @@ class TacytApp(Auth.Auth):
 +        With this method you can subscribe to filter.
 +        @param $filter_id id to filter you want subscribe.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UNSUBSCRIBE_REQUEST, None, None, filter_id)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.UNSUBSCRIBE_REQUEST, None, 0, filter_id)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
     def subscribe_public_filter(self, filter_id):
@@ -156,7 +156,7 @@ class TacytApp(Auth.Auth):
 		 With this method you can unsubscribe to filter.
 +        @param $filter_id id to filter you want unsubscribe.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SUBSCRIBE_REQUEST, None, None, filter_id)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.SUBSCRIBE_REQUEST, None, 0, filter_id)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
     def get_RSS_info(self, filter_id):
@@ -164,7 +164,7 @@ class TacytApp(Auth.Auth):
 +        This method get RSS information to a filter.
 +        @param $filter_id id to filter you want get RSS information.
 +        '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.GET_RSS_REQUEST, None, None, filter_id)
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.GET_RSS_REQUEST, None, 0, filter_id)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
 

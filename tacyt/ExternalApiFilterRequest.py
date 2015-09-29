@@ -4,8 +4,8 @@
  This library offers an API to use Tacyt in a python environment.
  Copyright (C) 2015 Eleven Paths
 '''
-from ExternalApiRequest import ExternalApiRequest
-import Filter
+from externalapirequest import ExternalApiRequest
+import filter
 
 try:
     import simplejson as json

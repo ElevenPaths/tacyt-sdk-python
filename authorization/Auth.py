@@ -4,8 +4,8 @@ import logging
 import time
 import json
 import hashlib
-from authorization import Response
-from tacyt import Version
+from authorization import response
+from tacyt import version
 
 
 class Auth(object):
@@ -49,12 +49,12 @@ class Auth(object):
         '''
         if host.startswith("http://"):
 
-            Version.Version.API_HOST = host[len("http://"):]
+            version.Version.API_HOST = host[len("http://"):]
             Auth.API_PORT = 80
             Auth.API_HTTPS = False
 
         elif host.startswith("https://"):
-            Version.Version.API_HOST = host[len("https://"):]
+            version.Version.API_HOST = host[len("https://"):]
             Auth.API_PORT = 443
             Auth.API_HTTPS = True
 
@@ -120,7 +120,7 @@ class Auth(object):
 
 
     def get_api_host(self):
-        return Version.Version.API_HOST
+        return version.Version.API_HOST
 
     def http_get_proxy(self, url, query_params):
         try:
@@ -226,15 +226,15 @@ class Auth(object):
         if Auth.API_PROXY != None:
             if Auth.API_HTTPS:
                 conn = http.HTTPSConnection(Auth.API_PROXY, Auth.API_PROXY_PORT)
-                conn.set_tunnel(Version.Version.API_HOST, Auth.API_PORT)
+                conn.set_tunnel(version.Version.API_HOST, Auth.API_PORT)
             else:
                 conn = http.HTTPConnection(Auth.API_PROXY, Auth.API_PROXY_PORT)
-                url = "http://" + Version.Version.API_HOST + url
+                url = "http://" + version.Version.API_HOST + url
         else:
             if Auth.API_HTTPS:
-                conn = http.HTTPSConnection(Version.Version.API_HOST, Auth.API_PORT)
+                conn = http.HTTPSConnection(version.Version.API_HOST, Auth.API_PORT)
             else:
-                conn = http.HTTPConnection(Version.Version.API_HOST, Auth.API_PORT)
+                conn = http.HTTPConnection(version.Version.API_HOST, Auth.API_PORT)
 
 
         if self.HTTP_METHOD_GET == method or self.HTTP_METHOD_DELETE == method:
@@ -247,7 +247,6 @@ class Auth(object):
                 json_body = json.dumps(body)
                 auth_headers = self.authentication_headers_with_body(method, url, x_headers, json_body, None)
                 auth_headers[self.HTTP_HEADER_CONTENT_TYPE] = content_type
-                #auth_headers[self.HTTP_HEADER_CONTENT_LENGTH] = str(len(json_body))
 
         try:
 
@@ -256,11 +255,11 @@ class Auth(object):
             if body is not None:
                 conn.request(method=method, url=url, body=json_body, headers=all_headers)
 
-            response = conn.getresponse()
-            response_data = response.read().decode('utf8')
+            res = conn.getresponse()
+            response_data = res.read().decode('utf8')
 
             conn.close()
-            ret = Response.Response(response_data)
+            ret = response.Response(response_data)
 
         except Exception, e:
             print "Exception"

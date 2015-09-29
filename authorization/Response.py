@@ -7,7 +7,7 @@ Copyright (C) 2015 Eleven Paths
 
 import json
 
-from authorization import Error
+from authorization import error
 
 
 class Response(object):
@@ -29,7 +29,7 @@ class Response(object):
             self.data = ""
 
         if "error" in json_object:
-            self.error = Error.Error(json_object["error"])
+            self.error = error.Error(json_object["error"])
         else:
             self.error = ""
 
@@ -55,7 +55,7 @@ class Response(object):
         '''
         @param $error an error to include in the API response
         '''
-        self.error = Error.Error(error)
+        self.error = error.Error(error)
 
     def to_json(self):
         '''
