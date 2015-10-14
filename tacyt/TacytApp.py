@@ -34,15 +34,15 @@ class TacytApp(auth.Auth):
         super(TacytApp, self).__init__(app_id, secret_key)
 
 
-    def search_apps(self, query=None, numberPage=None, maxResults=None):
-        '''
-+        @param $query The query string will filter the search results.
-+        @param $numberPage A number greater or equal to 1 indicating the page of results which have to be retrieved. 
-		 @param $maxResults A number between 1 and 100 indicating the max number of apps which have to be retrieved.
-+        @return Json structure with the keys to the Applications found.
-+        '''
-        result = ExternalApiSearchRequest(query, numberPage, maxResults)
-        return self.http_post(self.API_SEARCH_URL, None, body=result.get_json_encode_for_search())
+    def search_apps(self, query=None, numberPage=None, maxResults=None, outfields = None, grouped=None):
+            '''
+    +        @param $query The query string will filter the search results.
+    +        @param $numberPage A number greater or equal to 1 indicating the page of results which have to be retrieved.
+             @param $maxResults A number between 1 and 100 indicating the max number of apps which have to be retrieved.
+    +        @return Json structure with the keys to the Applications found.
+    +        '''
+            result = ExternalApiSearchRequest(query, numberPage, maxResults, outfields, grouped)
+            return self.http_post(self.API_SEARCH_URL, None, body=result.get_json_encode_for_search())
 
     def get_app_details(self, key):
         '''
@@ -143,7 +143,7 @@ class TacytApp(auth.Auth):
         result = ExternalApiFilterRequest(ExternalApiFilterRequest.LIST_DETECTIONS_REQUEST, None, page, filter_id)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
-    def un_subscribe_public_filter(self, filter_id):
+    def unsubscribe_public_filter(self, filter_id):
         '''
 +        With this method you can subscribe to filter.
 +        @param $filter_id id to filter you want subscribe.

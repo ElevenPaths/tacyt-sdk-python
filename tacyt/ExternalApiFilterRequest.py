@@ -4,7 +4,6 @@
  This library offers an API to use Tacyt in a python environment.
  Copyright (C) 2015 Eleven Paths
 '''
-from externalapirequest import ExternalApiRequest
 import filter
 
 try:
@@ -17,7 +16,7 @@ json_encode = lambda x: json.dumps(x)
 json_decode = lambda x: json.loads(x)
 
 
-class ExternalApiFilterRequest(ExternalApiRequest):
+class ExternalApiFilterRequest:
 
     JSON_FIELD_OPERATION = "operation"
     JSON_FIELD_DETECTIONS = "detections"

@@ -5,7 +5,6 @@ This library offers an API to use Tacyt in a python environment.
 Copyright (C) 2015 Eleven Paths
 '''
 
-from externalapirequest import ExternalApiRequest
 
 try:
     import simplejson as json
@@ -16,9 +15,7 @@ except ImportError:
 json_encode = lambda x: json.dumps(x)
 json_decode = lambda x: json.loads(x)
 
-class ExternalApiTagRequest(ExternalApiRequest):
-
-    FIELD_TAGS = "tags"
+class ExternalApiTagRequest:
 
     LIST_REQUEST = "LIST"
     CREATE_REQUEST = "CREATE"
