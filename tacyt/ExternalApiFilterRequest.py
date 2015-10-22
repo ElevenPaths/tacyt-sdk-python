@@ -17,7 +17,6 @@ json_decode = lambda x: json.loads(x)
 
 
 class ExternalApiFilterRequest:
-
     JSON_FIELD_OPERATION = "operation"
     JSON_FIELD_DETECTIONS = "detections"
 
@@ -29,7 +28,7 @@ class ExternalApiFilterRequest:
     FIELD_USER = "user"
     FIELD_PASS = "pass"
     FILTER_MAX_SIZE = 8000
-    ERROR_LIMIT_EXCEEDED = "Your filter definition exceeds the size limit of 8000 characters. Please, shorten the description or split the rules in multiple filters."
+    ERROR_LIMIT_EXCEEDED = "Your filter definition exceeds the size limit of " + str(FILTER_MAX_SIZE) + " characters. Please, shorten the description or split the rules in multiple filters."
 
     CREATE_REQUEST = "CREATE"
     READ_REQUEST = "READ"
@@ -65,12 +64,12 @@ class ExternalApiFilterRequest:
 
         if self.filter is not None:
 
-            json_obj["filter"]= {"id": self.filter.id,
-                                "name": self.filter.name,
-                                "description": self.filter.description,
-                                "weight": self.filter.weight,
-                                "visibility": self.filter.visibility,
-                                "rules": self.filter.rules}
+            json_obj["filter"] = {"id": self.filter.id,
+                                  "name": self.filter.name,
+                                  "description": self.filter.description,
+                                  "weight": self.filter.weight,
+                                  "visibility": self.filter.visibility,
+                                  "rules": self.filter.rules}
 
             filter_rules = list()
 
@@ -80,12 +79,10 @@ class ExternalApiFilterRequest:
 
                 json_obj["filter"]["rules"] = filter_rules
 
-
-        if(len(json.dumps(json_obj))) > self.FILTER_MAX_SIZE:
+        if (len(json.dumps(json_obj))) > self.FILTER_MAX_SIZE:
             raise Exception(self.ERROR_LIMIT_EXCEEDED)
-        else :
+        else:
             return json_obj
-
 
 
     def get_json_encode_dict_filter_for_content_based_requests(self):
@@ -100,10 +97,9 @@ class ExternalApiFilterRequest:
         if self.page is not None:
             json_obj["page"] = self.page
 
-
-        if(len(json.dumps(json_obj))) > self.FILTER_MAX_SIZE:
+        if (len(json.dumps(json_obj))) > self.FILTER_MAX_SIZE:
             raise Exception(self.ERROR_LIMIT_EXCEEDED)
-        else :
+        else:
             return json_obj
 
     def get_json_encode_string(self):
