@@ -28,6 +28,8 @@ class ExternalApiFilterRequest:
     FIELD_LINK = "link"
     FIELD_USER = "user"
     FIELD_PASS = "pass"
+    FILTER_MAX_SIZE = 8000
+    ERROR_LIMIT_EXCEEDED = "Your filter definition exceeds the size limit of 8000 characters. Please, shorten the description or split the rules in multiple filters."
 
     CREATE_REQUEST = "CREATE"
     READ_REQUEST = "READ"
@@ -78,7 +80,12 @@ class ExternalApiFilterRequest:
 
                 json_obj["filter"]["rules"] = filter_rules
 
-        return json_obj
+
+        if(len(json.dumps(json_obj))) > self.FILTER_MAX_SIZE:
+            raise Exception(self.ERROR_LIMIT_EXCEEDED)
+        else :
+            return json_obj
+
 
 
     def get_json_encode_dict_filter_for_content_based_requests(self):
@@ -93,7 +100,11 @@ class ExternalApiFilterRequest:
         if self.page is not None:
             json_obj["page"] = self.page
 
-        return json_obj
+
+        if(len(json.dumps(json_obj))) > self.FILTER_MAX_SIZE:
+            raise Exception(self.ERROR_LIMIT_EXCEEDED)
+        else :
+            return json_obj
 
     def get_json_encode_string(self):
 
