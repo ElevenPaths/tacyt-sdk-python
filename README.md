@@ -29,7 +29,7 @@ result_compare = api.compare_apps(list_app_key, "true")
 result_tag = api.list_tags()
 
 rule = filter.Filter.Rule('1', "contains(permissionName,\"SMS\")")
-filter_structure = filter.Filter("Whatsapp clones", "Apps which has the word Whatsapp in its description", 1, filter.Filter.PUBLIC_VISIBILITY, rule)
+filter_structure = filter.Filter("Apps SMS Permissions", "Apps which has sms permissions", 1, filter.Filter.PUBLIC_VISIBILITY, rule)
 result_filter = api.create_filter(filter_structure)
 
 result_get_rss = api.get_RSS_info(filter_id)
