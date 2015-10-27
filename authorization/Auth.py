@@ -15,7 +15,6 @@ class Auth(object):
     API_PROXY = None
     API_PROXY_PORT = None
 
-    DATE_HEADER_NAME = "X-11Paths-Date"
     AUTHORIZATION_METHOD = "11PATHS"
     X_11PATHS_HEADER_PREFIX = "X-11paths-"
     BODY_HASH_HEADER_NAME = X_11PATHS_HEADER_PREFIX + "Body-Hash"
@@ -41,6 +40,14 @@ class Auth(object):
     MULTIPART_FORM_DATA = "multipart/form-data"
     THREAD_POOL_SIZE = 10
 
+    def __init__(self, appId, secretKey):
+        '''
+        Create an instance of the class with the Application ID and secret obtained from Tacyt
+        @param $appId
+        @param $secretKey
+        '''
+        self.appId = appId
+        self.secretKey = secretKey
 
     @staticmethod
     def set_host(host):
@@ -115,14 +122,12 @@ class Auth(object):
         else:
             return query
 
-    def http_get_proxy(self, url):
-        return self.http_get_proxy(url, None)
-
 
     def get_api_host(self):
         return version.Version.API_HOST
 
-    def http_get_proxy(self, url, query_params):
+
+    def http_get_proxy(self, url, query_params = None):
         try:
             query = Auth.parse_query_params(query_params)
             url += query
@@ -135,9 +140,10 @@ class Auth(object):
     def http_get(self, url, headers):
         return self._http(Auth.HTTP_METHOD_GET, url,  headers, None)
 
+
     def http_delete_proxy(self, url):
         try:
-            return self.http_delete(self.get_api_host() + url, self.authentication_headers(self.HTTP_METHOD_DELETE, url, None))
+            return self.http_delete(self.get_api_host() + url, self.authentication_headers(self.HTTP_METHOD_DELETE, url, None), None)
 
         except:
             return None
@@ -193,14 +199,6 @@ class Auth(object):
         '''
         return time.strftime(Auth.UTC_STRING_FORMAT, time.gmtime())
 
-    def __init__(self, appId, secretKey):
-        '''
-        Create an instance of the class with the Application ID and secret obtained from Tacyt
-        @param $appId
-        @param $secretKey
-        '''
-        self.appId = appId
-        self.secretKey = secretKey
 
     def _http(self, method, url, x_headers=None, body=None, file=None, content_type=None):
         '''
@@ -420,10 +418,10 @@ class Auth(object):
         elif body:
             return self._http(self.HTTP_METHOD_POST,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
 
-    def authentication_headers_with_file(self, method, query_string, xheaders, file):
-        return self.authentication_headers_with_file(method, query_string, xheaders, file, self.get_current_UTC())
 
-    def authentication_headers_with_file(self, method, query_string, x_headers, file, utc):
+    def authentication_headers_with_file(self, method, query_string, x_headers, file):
+
+        utc = self.get_current_UTC()
 
         string_to_sign = (method.upper().strip() + "\n" +
                           utc + "\n" +
@@ -440,7 +438,7 @@ class Auth(object):
 
         if file is not None:
             file_hash = hashlib.sha1(str(file)).hexdigest()
-            headers[Auth.FILE_HASH_HEADER_NAME, file_hash]
+            headers[Auth.FILE_HASH_HEADER_NAME] = file_hash
 
         return headers
 
