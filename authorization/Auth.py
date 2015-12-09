@@ -251,8 +251,6 @@ class Auth(object):
             res = conn.getresponse()
             response_data = res.read().decode('utf8')
 
-            print response_data
-
             conn.close()
             ret = Response(response_data)
 
@@ -380,7 +378,7 @@ class Auth(object):
             serialized_headers = ""
             for key, value in sorted(headers.iteritems()):
                 if not key.startswith(Auth.X_11PATHS_HEADER_PREFIX.lower()):
-                    logging.error("Error serializing headers. Only specific " + Auth.X_11PATHS_HEADER_PREFIX + " headers need to be singed")
+                    logging.error("Error serializing headers. Only specific " + Auth.X_11PATHS_HEADER_PREFIX + " headers need to be signed")
                     return None
                 serialized_headers += key + Auth.X_11PATHS_HEADER_SEPARATOR + value + " "
             return serialized_headers.strip()
@@ -426,11 +424,15 @@ class Auth(object):
         try:
             import requests
         except Exception:
-            return Response(error=Error.Error({"code":"-1","message":"Library requests not found.Please install."}))
+            return Response(error=Error.Error({"code":"-1","message":"The Python \"request\" library was not found. Please, install it before call the upload method."}))
 
 
         files = {'file': (file_name, file_stream, 'application/octet-stream')}
-        res = requests.post("https://" + self.get_api_host() + url, headers=headers, files=files)
+        if Auth.API_HTTPS:
+            url = "https://" + self.get_api_host() + url
+        else:
+            url = "http://" + self.get_api_host() + url
+        res = requests.post( url, headers=headers, files=files)
         res.raise_for_status()
 
         response_data = Response(res.content)

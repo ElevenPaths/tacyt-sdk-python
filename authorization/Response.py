@@ -30,12 +30,10 @@ class Response(object):
                 self.data = json_object["data"]
             else:
                 self.data = ""
-
             if "error" in json_object:
                 self.error = Error.Error(json_object["error"])
             else:
                 self.error = ""
-        #self.__dict__ = json.loads(json_string)
 
     def get_data(self):
         '''
