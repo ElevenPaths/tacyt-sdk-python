@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import ExternalApiFilterRequest
-import ExternalApiTagRequest
-import ExternalApiCompareRequest
-import ExternalApiSearchRequest
-import Filter
+from ExternalApiFilterRequest import ExternalApiFilterRequest
+from ExternalApiTagRequest import ExternalApiTagRequest
+from Filter import Filter
+from ExternalApiCompareRequest import ExternalApiCompareRequest
+from ExternalApiSearchRequest import ExternalApiSearchRequest
 from Version import Version
 from authorization.Auth import Auth
 
@@ -28,7 +28,7 @@ class TacytApp(Auth):
     API_FILTERS_URL = "/api/"+Version.API_VERSION+"/filters"
     API_TAGS_URL = "/api/"+Version.API_VERSION+"/tags"
     API_COMPARER_URL = "/api/"+Version.API_VERSION+"/compare"
-    API_UPLOAD_URL = "/api/" + Version.API_VERSION+ "/upload"
+    API_UPLOAD_URL = "/api/" +Version.API_VERSION+ "/upload"
 
     def __init__(self, app_id, secret_key):
         '''
@@ -169,7 +169,7 @@ class TacytApp(Auth):
         This method get RSS information to a filter.
         @param $filter_id id to filter you want get RSS information.
         '''
-        result = ExternalApiFilterRequest(ExternalApiFilterRequest.GET_RSS_REQUEST, None, 0, filter_id)
+        result = ExternalApiFilterRequest( ExternalApiFilterRequest.GET_RSS_REQUEST, None, None, filter_id)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
 

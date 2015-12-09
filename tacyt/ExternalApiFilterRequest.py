@@ -16,7 +16,7 @@ json_encode = lambda x: json.dumps(x)
 json_decode = lambda x: json.loads(x)
 
 
-class ExternalApiFilterRequest:
+class ExternalApiFilterRequest():
     JSON_FIELD_OPERATION = "operation"
     JSON_FIELD_DETECTIONS = "detections"
 
@@ -49,10 +49,12 @@ class ExternalApiFilterRequest:
         self.request_type = request_type
         self.content = content
 
-        if page < 1:
+        if page < 1 and page is not None:
             self.page = 1
         else:
             self.page = page
+
+
 
         self.filter = filter
 
