@@ -9,6 +9,8 @@
 
 * To get the "API ID" and "Secret" (fundamental values for integrating Tacyt in any application) it’s necessary to have an account in Tacyt's website.
 
+* In order to use the upload method you need the Python request library (http://docs.python-requests.org/en/latest/user/install/#install)
+
 
 #### USING THE SDK IN PYTHON ####
 
