@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from externalapifilterrequest import ExternalApiFilterRequest
-from externalapitagrequest import ExternalApiTagRequest
-from externalapicomparerequest import ExternalApiCompareRequest
-from externalapisearchrequest import ExternalApiSearchRequest
-from filter import Filter
-from version import Version
-from authorization import auth
+import ExternalApiFilterRequest
+import ExternalApiTagRequest
+import ExternalApiCompareRequest
+import ExternalApiSearchRequest
+import Filter
+from Version import Version
+from authorization.Auth import Auth
+
+import hashlib
+from os import path
 
 try:
     import simplejson as json
@@ -18,13 +21,14 @@ json_encode = lambda x: json.dumps(x)
 json_decode = lambda x: json.loads(x)
 
 
-class TacytApp(auth.Auth):
+class TacytApp(Auth):
 
     API_SEARCH_URL = "/api/"+Version.API_VERSION+"/search"
     API_DETAILS_URL = "/api/"+Version.API_VERSION+"/details"
     API_FILTERS_URL = "/api/"+Version.API_VERSION+"/filters"
     API_TAGS_URL = "/api/"+Version.API_VERSION+"/tags"
     API_COMPARER_URL = "/api/"+Version.API_VERSION+"/compare"
+    API_UPLOAD_URL = "/api/" + Version.API_VERSION+ "/upload"
 
     def __init__(self, app_id, secret_key):
         '''
@@ -176,3 +180,23 @@ class TacytApp(auth.Auth):
         '''
         result = ExternalApiCompareRequest(apps, include_details)
         return self.http_post(self.API_COMPARER_URL, None, body=result.get_json_encode_for_compare_apps())
+
+    def upload_app(self, apk_file):
+        """
+        Upload app to Tacyt
+        :param apk_file: path to file apk
+        :return: Response
+        """
+        try:
+            f = open(apk_file, 'rb')
+            file_name = path.basename(f.name)
+            file_stream = f.read()
+            f.close()
+            headers = dict()
+            headers[Auth.FILE_HASH_HEADER_NAME] = hashlib.sha1(file_stream).hexdigest()
+
+            return self.http_post_file(self.API_UPLOAD_URL, self.authentication_headers_with_body(self.HTTP_METHOD_POST, self.API_UPLOAD_URL, headers, ""), file_stream, file_name)
+
+        except Exception, e:
+            print repr(e)
+            return None
