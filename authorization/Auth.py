@@ -4,9 +4,9 @@ import logging
 import time
 import json
 import hashlib
-from authorization import response
-from tacyt import version
-
+from authorization.Response import Response
+from tacyt.Version import Version
+import Error
 
 class Auth(object):
 
@@ -56,12 +56,12 @@ class Auth(object):
         '''
         if host.startswith("http://"):
 
-            version.Version.API_HOST = host[len("http://"):]
+            Version.API_HOST = host[len("http://"):]
             Auth.API_PORT = 80
             Auth.API_HTTPS = False
 
         elif host.startswith("https://"):
-            version.Version.API_HOST = host[len("https://"):]
+            Version.API_HOST = host[len("https://"):]
             Auth.API_PORT = 443
             Auth.API_HTTPS = True
 
@@ -124,7 +124,7 @@ class Auth(object):
 
 
     def get_api_host(self):
-        return version.Version.API_HOST
+        return Version.API_HOST
 
 
     def http_get_proxy(self, url, query_params = None):
@@ -159,12 +159,6 @@ class Auth(object):
         except:
             return None
 
-    def http_post_file_proxy(self, url, file):
-        try:
-            return self.http_post_file(self.get_api_host() + url, self.authentication_headers_with_file(self.HTTP_METHOD_POST,url,None, file, self.get_current_UTC()), file)
-
-        except:
-            return None
 
     def http_put_proxy(self,url,data=None,body=None):
         try:
@@ -224,15 +218,15 @@ class Auth(object):
         if Auth.API_PROXY != None:
             if Auth.API_HTTPS:
                 conn = http.HTTPSConnection(Auth.API_PROXY, Auth.API_PROXY_PORT)
-                conn.set_tunnel(version.Version.API_HOST, Auth.API_PORT)
+                conn.set_tunnel(Version.API_HOST, Auth.API_PORT)
             else:
                 conn = http.HTTPConnection(Auth.API_PROXY, Auth.API_PROXY_PORT)
-                url = "http://" + version.Version.API_HOST + url
+                url = "http://" + Version.API_HOST + url
         else:
             if Auth.API_HTTPS:
-                conn = http.HTTPSConnection(version.Version.API_HOST, Auth.API_PORT)
+                conn = http.HTTPSConnection(Version.API_HOST, Auth.API_PORT)
             else:
-                conn = http.HTTPConnection(version.Version.API_HOST, Auth.API_PORT)
+                conn = http.HTTPConnection(Version.API_HOST, Auth.API_PORT)
 
 
         if self.HTTP_METHOD_GET == method or self.HTTP_METHOD_DELETE == method:
@@ -246,6 +240,7 @@ class Auth(object):
                 auth_headers = self.authentication_headers_with_body(method, url, x_headers, json_body, None)
                 auth_headers[self.HTTP_HEADER_CONTENT_TYPE] = content_type
 
+
         try:
 
             all_headers = auth_headers
@@ -256,8 +251,10 @@ class Auth(object):
             res = conn.getresponse()
             response_data = res.read().decode('utf8')
 
+            print response_data
+
             conn.close()
-            ret = response.Response(response_data)
+            ret = Response(response_data)
 
         except Exception, e:
             print "Exception"
@@ -333,11 +330,17 @@ class Auth(object):
             needed to be sent with a request to the API.
         """
 
+        headers = dict()
         body_hash = None
+
         if body is not None:
             body_hash = hashlib.sha1(str(body)).hexdigest()
             if x_headers is None:
                 x_headers = dict()
+            else:
+                for key,value in x_headers.items():
+                    headers[key] = value
+
             x_headers[Auth.BODY_HASH_HEADER_NAME] = body_hash
 
         if not utc:
@@ -351,11 +354,12 @@ class Auth(object):
                           query_string.strip())
 
 
+
         authorization_header = (Auth.AUTHORIZATION_METHOD + Auth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
                                 self.appId + Auth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
                                 self.sign_data(string_to_sign))
 
-        headers = dict()
+
         headers[Auth.AUTHORIZATION_HEADER_NAME] = authorization_header
         headers[Auth.DATE_HEADER_NAME] = utc
         if body_hash is not None:
@@ -374,10 +378,9 @@ class Auth(object):
             headers = dict((k.lower(), v) for k, v in x_headers.iteritems())
 
             serialized_headers = ""
-            for key, value in headers.iteritems():
+            for key, value in sorted(headers.iteritems()):
                 if not key.startswith(Auth.X_11PATHS_HEADER_PREFIX.lower()):
-                    logging.error(
-                        "Error serializing headers. Only specific " + Auth.X_11PATHS_HEADER_PREFIX + " headers need to be singed")
+                    logging.error("Error serializing headers. Only specific " + Auth.X_11PATHS_HEADER_PREFIX + " headers need to be singed")
                     return None
                 serialized_headers += key + Auth.X_11PATHS_HEADER_SEPARATOR + value + " "
             return serialized_headers.strip()
@@ -419,38 +422,27 @@ class Auth(object):
             return self._http(self.HTTP_METHOD_POST,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
 
 
-    def authentication_headers_with_file(self, method, query_string, x_headers, file):
-
-        utc = self.get_current_UTC()
-
-        string_to_sign = (method.upper().strip() + "\n" +
-                          utc + "\n" +
-                          self.get_serialized_headers(x_headers) + "\n" +
-                          query_string.strip())
-
-        authorization_header = (Auth.AUTHORIZATION_METHOD + Auth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
-                                self.appId + Auth.AUTHORIZATION_HEADER_FIELD_SEPARATOR +
-                                self.sign_data(string_to_sign))
-
-        headers = dict()
-        headers[Auth.AUTHORIZATION_HEADER_NAME] = authorization_header
-        headers[Auth.DATE_HEADER_NAME] = utc
-
-        if file is not None:
-            file_hash = hashlib.sha1(str(file)).hexdigest()
-            headers[Auth.FILE_HASH_HEADER_NAME] = file_hash
-
-        return headers
+    def http_post_file(self, url, headers, file_stream, file_name):
+        try:
+            import requests
+        except Exception:
+            return Response(error=Error.Error({"code":"-1","message":"Library requests not found.Please install."}))
 
 
-    def http_post_file(self, url, headers, file):
-        return self._http(self.HTTP_METHOD_POST,url, headers, None, file, self.MULTIPART_FORM_DATA)
+        files = {'file': (file_name, file_stream, 'application/octet-stream')}
+        res = requests.post("https://" + self.get_api_host() + url, headers=headers, files=files)
+        res.raise_for_status()
+
+        response_data = Response(res.content)
+
+        return response_data
 
     def http_put(self, url, headers, data=None, body=None):
         if data is not None:
             return self._http(self.HTTP_METHOD_PUT,url,  headers, data)
         elif body is not None:
             return self._http(self.HTTP_METHOD_PUT,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
+
 
 
 

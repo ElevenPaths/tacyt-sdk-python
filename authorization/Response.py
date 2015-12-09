@@ -7,7 +7,7 @@ Copyright (C) 2015 Eleven Paths
 
 import json
 
-from authorization import error
+from authorization import Error
 
 
 class Response(object):
@@ -18,20 +18,24 @@ class Response(object):
     could have valid information in the data field and at the same time inform of an error.
     '''
 
-    def __init__(self, json_string):
+    def __init__(self, data=None, error=None, json_string=None ):
         '''
         @param $json a json string received from one of the methods of the Tacyt API
         '''
-        json_object = json.loads(json_string)
-        if "data" in json_object:
-            self.data = json_object["data"]
-        else:
-            self.data = ""
+        self.data = data
+        self.error = error
+        if json_string is not None:
+            json_object = json.loads(json_string)
+            if "data" in json_object:
+                self.data = json_object["data"]
+            else:
+                self.data = ""
 
-        if "error" in json_object:
-            self.error = error.Error(json_object["error"])
-        else:
-            self.error = ""
+            if "error" in json_object:
+                self.error = Error.Error(json_object["error"])
+            else:
+                self.error = ""
+        #self.__dict__ = json.loads(json_string)
 
     def get_data(self):
         '''
@@ -55,7 +59,7 @@ class Response(object):
         '''
         @param $error an error to include in the API response
         '''
-        self.error = error.Error(error)
+        self.error = Error.Error(error)
 
     def to_json(self):
         '''
