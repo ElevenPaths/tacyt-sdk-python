@@ -3,7 +3,7 @@
 
 #### PREREQUISITES ####
 
-* Python.
+* Python 2.7.
 
 * Read API documentation (https://path5.elevenpaths.com/help/api).
 
