@@ -435,7 +435,7 @@ class Auth(object):
         res = requests.post( url, headers=headers, files=files)
         res.raise_for_status()
 
-        response_data = Response(res.content)
+        response_data = Response(json_string=res.content)
 
         return response_data
 
