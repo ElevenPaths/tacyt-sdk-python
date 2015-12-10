@@ -39,7 +39,7 @@ class TacytApp(Auth):
         super(TacytApp, self).__init__(app_id, secret_key)
 
 
-    def search_apps(self, query=None, numberPage=None, maxResults=None, outfields = None, grouped=None):
+    def search_apps(self, query, numberPage=None, maxResults=None, outfields = None, grouped=None):
         '''
         @param $query The query string will filter the search results.
         @param $numberPage A number greater or equal to 1 indicating the page of results which have to be retrieved.
