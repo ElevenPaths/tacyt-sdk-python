@@ -3,7 +3,7 @@
 
 #### PREREQUISITES ####
 
-* Python.
+* Python 2.7.
 
 * Read API documentation (https://path5.elevenpaths.com/help/api).
 
@@ -23,7 +23,7 @@
 
 * Call to Tacyt Server to do searches, compare apps, list tags, create filters or get the RSS info ...
 ```
-result_search = api.search_apps({"title":"5G Speed For Android"})
+result_search = api.search_apps("title:\"5G Speed For Android\"")
 
 list_app_key = ["com.linterna11GooglePlay", "com.sms.kat1aptoideapps"]
 result_compare = api.compare_apps(list_app_key, "true")

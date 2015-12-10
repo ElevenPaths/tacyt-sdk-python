@@ -252,7 +252,7 @@ class Auth(object):
             response_data = res.read().decode('utf8')
 
             conn.close()
-            ret = Response(response_data)
+            ret = Response(json_string=response_data)
 
         except Exception, e:
             print "Exception"
