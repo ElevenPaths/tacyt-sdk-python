@@ -26,11 +26,13 @@ class Filter():
     weight = None
     visibility = PRIVATE_VISIBILITY
     rules = [Rule(None, None)]
+    groups = None
 
-    def __init__(self, id=None, name=None, description=None, weight=None, visibility=None, rules=None):
+    def __init__(self, id=None, name=None, description=None, weight=None, visibility=None, rules=None, groups=None):
         self.id = id
         self.name = name
         self.description = description
         self.weight = weight
         self.visibility = visibility
         self.rules = rules
+        self.groups = groups
