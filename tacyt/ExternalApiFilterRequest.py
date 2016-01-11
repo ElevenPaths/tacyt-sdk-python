@@ -39,6 +39,9 @@ class ExternalApiFilterRequest():
     UNSUBSCRIBE_REQUEST = "UNSUBSCRIBE"
     GET_RSS_REQUEST = "GET_RSS"
     LIST_DETECTIONS_REQUEST = "LIST_DETECTIONS"
+    READ_GROUPS = "READ_GROUPS"
+    LIST_GROUP_DETECTIONS = "LIST_GROUP_DETECTIONS"
+    GET_GROUP_RSS = "GET_GROUP_RSS"
 
     request_type = None
     filter = None
@@ -54,8 +57,6 @@ class ExternalApiFilterRequest():
         else:
             self.page = page
 
-
-
         self.filter = filter
 
     def get_json_encode_for_filter_based_requests(self):
@@ -65,27 +66,12 @@ class ExternalApiFilterRequest():
             json_obj = {"requestType": self.request_type}
 
         if self.filter is not None:
-
-            json_obj["filter"] = {"id": self.filter.id,
-                                  "name": self.filter.name,
-                                  "description": self.filter.description,
-                                  "weight": self.filter.weight,
-                                  "visibility": self.filter.visibility,
-                                  "rules": self.filter.rules}
-
-            filter_rules = list()
-
-            if self.filter.rules is not None:
-                for rule in self.filter.rules:
-                    filter_rules.append({"weight": rule.weight, "content": rule.content})
-
-                json_obj["filter"]["rules"] = filter_rules
+            json_obj["filter"] = self.filter.get_json_encode()
 
         if (len(json.dumps(json_obj))) > self.FILTER_MAX_SIZE:
             raise Exception(self.ERROR_LIMIT_EXCEEDED)
         else:
             return json_obj
-
 
     def get_json_encode_dict_filter_for_content_based_requests(self):
         json_obj = dict()

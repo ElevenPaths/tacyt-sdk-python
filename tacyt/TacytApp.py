@@ -106,6 +106,13 @@ class TacytApp(Auth):
         result = ExternalApiFilterRequest(ExternalApiFilterRequest.UPDATE_REQUEST, filter, 0, None)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_for_filter_based_requests())
 
+    def read_group_filters(self):
+        '''
+        @return all group filters created
+        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.READ_GROUPS, None, 0, None)
+        return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_for_filter_based_requests())
+
     def read_all_filters(self):
         '''
         @return a list of filters creates.
@@ -148,6 +155,15 @@ class TacytApp(Auth):
         result = ExternalApiFilterRequest(ExternalApiFilterRequest.LIST_DETECTIONS_REQUEST, None, page, filter_id)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
+    def list_group_detected_apps(self, page, groupName):
+        '''
+        @param $groupName name of the group.
+        @param $page A number greater or equal to 1 indicating the page of results which have to be retrieved.
+        @return Json structure with the details of applications detected by the filters group.
+        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.LIST_GROUP_DETECTIONS, None, page, groupName)
+        return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
+
     def unsubscribe_public_filter(self, filter_id):
         '''
         With this method you can subscribe to filter.
@@ -166,12 +182,19 @@ class TacytApp(Auth):
 
     def get_RSS_info(self, filter_id):
         '''
-        This method get RSS information to a filter.
+        This method get the RSS information of a filter.
         @param $filter_id id to filter you want get RSS information.
         '''
         result = ExternalApiFilterRequest( ExternalApiFilterRequest.GET_RSS_REQUEST, None, None, filter_id)
         return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
+    def get_group_RSS_info(self, groupName):
+        '''
+        This method get the RSS information of a filters group.
+        @param $groupName name of the filters group you want get RSS information.
+        '''
+        result = ExternalApiFilterRequest(ExternalApiFilterRequest.GET_GROUP_RSS, None, None, groupName)
+        return self.http_post(self.API_FILTERS_URL, None, body=result.get_json_encode_dict_filter_for_content_based_requests())
 
     def compare_apps(self, apps, include_details):
         '''
@@ -200,3 +223,4 @@ class TacytApp(Auth):
         except Exception, e:
             print repr(e)
             return None
+        
