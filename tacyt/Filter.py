@@ -17,6 +17,9 @@ class Filter():
             self.weight = weight
             self.content = content
 
+        def get_json_encode(self):
+            return {"weight": self.weight, "content": self.content}
+
     PUBLIC_VISIBILITY = "PUBLIC"
     PRIVATE_VISIBILITY = "PRIVATE"
 
@@ -36,3 +39,23 @@ class Filter():
         self.visibility = visibility
         self.rules = rules
         self.groups = groups
+
+    def get_json_encode(self):
+
+        result = {"id": self.id,
+                  "name": self.name,
+                  "description": self.description,
+                  "weight": self.weight,
+                  "visibility": self.visibility,
+                  "rules": self.rules,
+                  "groups": self.groups}
+
+        filter_rules = list()
+
+        if self.rules is not None:
+            for rule in self.rules:
+                filter_rules.append(rule.get_json_encode())
+
+            result["rules"] = filter_rules
+
+        return result
