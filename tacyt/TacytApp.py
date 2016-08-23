@@ -204,7 +204,7 @@ class TacytApp(Auth):
         result = ExternalApiCompareRequest(apps, include_details)
         return self.http_post(self.API_COMPARER_URL, None, body=result.get_json_encode_for_compare_apps())
 
-    def upload_app(self, apk_file):
+    def upload_app(self, apk_file, tagName=None):
         """
         Upload app to Tacyt
         :param apk_file: path to file apk
@@ -218,7 +218,7 @@ class TacytApp(Auth):
             headers = dict()
             headers[Auth.FILE_HASH_HEADER_NAME] = hashlib.sha1(file_stream).hexdigest()
 
-            return self.http_post_file(self.API_UPLOAD_URL, self.authentication_headers_with_body(self.HTTP_METHOD_POST, self.API_UPLOAD_URL, headers, ""), file_stream, file_name)
+            return self.http_post_file(self.API_UPLOAD_URL, self.authentication_headers_with_body(self.HTTP_METHOD_POST, self.API_UPLOAD_URL, headers, ""), file_stream, file_name, tagName)
 
         except Exception, e:
             print repr(e)

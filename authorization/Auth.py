@@ -420,7 +420,7 @@ class Auth(object):
             return self._http(self.HTTP_METHOD_POST,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
 
 
-    def http_post_file(self, url, headers, file_stream, file_name):
+    def http_post_file(self, url, headers, file_stream, file_name, tag_name):
         try:
             import requests
         except Exception:
@@ -432,7 +432,11 @@ class Auth(object):
             url = "https://" + self.get_api_host() + url
         else:
             url = "http://" + self.get_api_host() + url
-        res = requests.post( url, headers=headers, files=files)
+
+        if tag_name is None:
+            res = requests.post(url, headers=headers, files=files)
+        else:
+            res = requests.post( url, headers=headers, files=files, data = {'tagName':tag_name})
         res.raise_for_status()
 
         response_data = Response(json_string=res.content)
