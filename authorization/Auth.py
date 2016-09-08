@@ -122,10 +122,8 @@ class Auth(object):
         else:
             return query
 
-
     def get_api_host(self):
         return Version.API_HOST
-
 
     def http_get_proxy(self, url, query_params = None):
         try:
@@ -139,7 +137,6 @@ class Auth(object):
 
     def http_get(self, url, headers):
         return self._http(Auth.HTTP_METHOD_GET, url,  headers, None)
-
 
     def http_delete_proxy(self, url):
         try:
@@ -158,7 +155,6 @@ class Auth(object):
 
         except:
             return None
-
 
     def http_put_proxy(self,url,data=None,body=None):
         try:
@@ -192,7 +188,6 @@ class Auth(object):
         @return a string representation of the current time in UTC to be used in a Date HTTP Header
         '''
         return time.strftime(Auth.UTC_STRING_FORMAT, time.gmtime())
-
 
     def _http(self, method, url, x_headers=None, body=None, file=None, content_type=None):
         '''
@@ -239,7 +234,6 @@ class Auth(object):
                 json_body = json.dumps(body)
                 auth_headers = self.authentication_headers_with_body(method, url, x_headers, json_body, None)
                 auth_headers[self.HTTP_HEADER_CONTENT_TYPE] = content_type
-
 
         try:
 
@@ -311,7 +305,6 @@ class Auth(object):
 
         return headers
 
-
     def authentication_headers_with_body(self, http_method, query_string, x_headers=None, body=None, utc=None):
         """
         Calculates the headers to be sent with a request to the API so the server
@@ -364,7 +357,6 @@ class Auth(object):
             headers[Auth.BODY_HASH_HEADER_NAME] = body_hash
 
         return headers
-
 
     def get_serialized_headers(self, x_headers):
         '''
@@ -419,13 +411,11 @@ class Auth(object):
         elif body:
             return self._http(self.HTTP_METHOD_POST,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
 
-
     def http_post_file(self, url, headers, file_stream, file_name, tag_name):
         try:
             import requests
         except Exception:
             return Response(error=Error.Error({"code":"-1","message":"The Python \"request\" library was not found. Please, install it before call the upload method."}))
-
 
         files = {'file': (file_name, file_stream, 'application/octet-stream')}
         if Auth.API_HTTPS:
@@ -433,10 +423,16 @@ class Auth(object):
         else:
             url = "http://" + self.get_api_host() + url
 
-        if tag_name is None:
-            res = requests.post(url, headers=headers, files=files)
+        if self.API_PROXY is not None:
+            proxy_host = "%s:%d" % (self.API_PROXY, self.API_PROXY_PORT)
+            proxies = {"http": proxy_host, "https": proxy_host}
         else:
-            res = requests.post( url, headers=headers, files=files, data = {'tagName':tag_name})
+            proxies = None
+
+        if tag_name is None:
+            res = requests.post(url, headers=headers, files=files, proxies=proxies)
+        else:
+            res = requests.post( url, headers=headers, files=files, data={'tagName': tag_name}, proxies=proxies)
         res.raise_for_status()
 
         response_data = Response(json_string=res.content)
@@ -448,8 +444,3 @@ class Auth(object):
             return self._http(self.HTTP_METHOD_PUT,url,  headers, data)
         elif body is not None:
             return self._http(self.HTTP_METHOD_PUT,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
-
-
-
-
-
