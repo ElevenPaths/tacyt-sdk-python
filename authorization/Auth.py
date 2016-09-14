@@ -415,7 +415,7 @@ class Auth(object):
         try:
             import requests
         except Exception:
-            return Response(error=Error.Error({"code":"-1","message":"The Python \"request\" library was not found. Please, install it before call the upload method."}))
+            return Response(error=Error.Error({"code":"-1","message":"The Python \"requests\" library was not found. Please, install it before call the upload method."}))
 
         files = {'file': (file_name, file_stream, 'application/octet-stream')}
         if Auth.API_HTTPS:
