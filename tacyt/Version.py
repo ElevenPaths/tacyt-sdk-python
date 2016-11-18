@@ -5,5 +5,5 @@ class Version:
     def __init__(self):
         pass
 
-    API_VERSION = "1.4"
+    API_VERSION = "1.7"
     API_HOST = "path5.11paths.com"
