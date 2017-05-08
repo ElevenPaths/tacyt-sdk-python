@@ -5,7 +5,7 @@
 
 * Python 2.7.
 
-* Read API documentation (https://path5.elevenpaths.com/help/api).
+* Read API documentation (https://tacyt.elevenpaths.com/help/api).
 
 * To get the "API ID" and "Secret" (fundamental values for integrating Tacyt in any application) it’s necessary to have an account in Tacyt's website.
 

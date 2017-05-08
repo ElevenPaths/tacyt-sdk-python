@@ -6,4 +6,4 @@ class Version:
         pass
 
     API_VERSION = "1.7"
-    API_HOST = "path5.11paths.com"
+    API_HOST = "tacyt.elevenpaths.com"
