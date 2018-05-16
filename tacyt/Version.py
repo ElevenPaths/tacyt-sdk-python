@@ -5,5 +5,5 @@ class Version:
     def __init__(self):
         pass
 
-    API_VERSION = "1.7"
+    API_VERSION = "2.1"
     API_HOST = "tacyt.elevenpaths.com"
