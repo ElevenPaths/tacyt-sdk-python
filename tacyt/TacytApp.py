@@ -6,11 +6,14 @@ from ExternalApiTagRequest import ExternalApiTagRequest
 from Filter import Filter
 from ExternalApiCompareRequest import ExternalApiCompareRequest
 from ExternalApiSearchRequest import ExternalApiSearchRequest
+from ExternalApiEngineVersionRequest import ExternalApiEngineVersionRequest
 from Version import Version
 from authorization.Auth import Auth
 
 import hashlib
 from os import path
+
+
 
 try:
     import simplejson as json
@@ -29,6 +32,7 @@ class TacytApp(Auth):
     API_TAGS_URL = "/api/"+Version.API_VERSION+"/tags"
     API_COMPARER_URL = "/api/"+Version.API_VERSION+"/compare"
     API_UPLOAD_URL = "/api/" +Version.API_VERSION+ "/upload"
+    API_ENGINE_VERSION_URL = "/api/" +Version.API_VERSION+ "/engineVersion"
 
     def __init__(self, app_id, secret_key):
         '''
@@ -223,4 +227,17 @@ class TacytApp(Auth):
         except Exception, e:
             print repr(e)
             return None
-        
+
+    def getEngineVersion(self, date=None, engineId=None, lang=None):
+        """
+        Search an engine and its associated vulnerabilities. If no params return a list of all existing engines
+        :param engineId: engine id.
+        :param date: search the engine available on that date.
+        :param lang: output language of vulnerabilities fields. Values "es" or "en".
+        :return: Response
+        """
+        params = ""
+        if engineId or date or lang:
+            externalEngineVersion = ExternalApiEngineVersionRequest(date, engineId, lang)
+            params = "?" + externalEngineVersion.get_encoded_params()
+        return self.http_get(self.API_ENGINE_VERSION_URL + params, None)
