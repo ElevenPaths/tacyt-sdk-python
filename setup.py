@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='tacytsdk',
-      version='2.5',
+      version='2.6',
       description='Tacyt SDK',
       url='https://github.com/ElevenPaths/tacyt-sdk-python',
       author='ElevenPaths',
