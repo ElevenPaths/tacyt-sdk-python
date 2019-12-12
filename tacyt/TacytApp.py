@@ -7,13 +7,12 @@ from Filter import Filter
 from ExternalApiCompareRequest import ExternalApiCompareRequest
 from ExternalApiSearchRequest import ExternalApiSearchRequest
 from ExternalApiEngineVersionRequest import ExternalApiEngineVersionRequest
+from tacyt.ExternalApiUploadURLRequest import ExternalApiUploadURLRequest
 from Version import Version
 from authorization.Auth import Auth
 
 import hashlib
 from os import path
-
-
 
 try:
     import simplejson as json
@@ -33,6 +32,7 @@ class TacytApp(Auth):
     API_COMPARER_URL = "/api/"+Version.API_VERSION+"/compare"
     API_UPLOAD_URL = "/api/" +Version.API_VERSION+ "/upload"
     API_ENGINE_VERSION_URL = "/api/" +Version.API_VERSION+ "/engineVersion"
+    API_UPLOADURL_URL = "/api/" +Version.API_VERSION+ "/uploadURL"
 
     def __init__(self, app_id, secret_key):
         '''
@@ -241,3 +241,13 @@ class TacytApp(Auth):
             externalEngineVersion = ExternalApiEngineVersionRequest(date, engineId, lang)
             params = "?" + externalEngineVersion.get_encoded_params()
         return self.http_get(self.API_ENGINE_VERSION_URL + params, None)
+
+    def uploadURL(self, urls, tagNames=None):
+        """
+        Download apps from a market URLs
+        :param urls:  List of urls to upload
+        :param tagNames List of tags to identify the application
+        :return: Response
+        """
+        externalApiUploadURL = ExternalApiUploadURLRequest(urls, tagNames)
+        return self.http_post(self.API_UPLOADURL_URL, headers=None, body=externalApiUploadURL.get_json_encode_for_upload_url())
