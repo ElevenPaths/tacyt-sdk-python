@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
+"""
 This library offers an API to use Tacyt in a python environment.
 Copyright (C) 2019 Eleven Paths
-'''
+"""
 
 class ExternalApiUploadURLRequest:
-
     def __init__(self, urls, tagNames=None):
         self.urls = urls
         self.tagNames = tagNames

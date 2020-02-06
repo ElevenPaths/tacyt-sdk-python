@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
+"""
 This library offers an API to use Tacyt in a python environment.
 Copyright (C) 2015 Eleven Paths
-'''
-
+"""
 from cStringIO import StringIO
 
 
 class ExternalApiSearchRequest:
-
     grouped = None
     numberPage = 1
     maxResults = 20
@@ -17,21 +15,11 @@ class ExternalApiSearchRequest:
     outputFields = None
 
     def __init__(self, query=None, numberPage=None, maxResults=None, outputFields=None, grouped=None):
-
         string_build = StringIO()
-        if (numberPage <= 0):
-            self.numberPage = 1
-        else:
-            self.numberPage = numberPage
+        self.numberPage = numberPage if numberPage > 1 else 1
+        self.maxResults = maxResults if maxResults > 1 else 20
 
-
-        if (maxResults <= 0):
-            self.maxResults = 20
-
-        else:
-            self.maxResults = maxResults
-
-        if (outputFields != None and len(outputFields) > 0):
+        if outputFields:
             for field in outputFields:
                 string_build.write(field + ",")
 
@@ -40,7 +28,6 @@ class ExternalApiSearchRequest:
         self.query = query
 
     def get_json_encode_for_search(self):
-
         json_data = dict()
         if self.query is not None:
             json_data["query"] = self.query

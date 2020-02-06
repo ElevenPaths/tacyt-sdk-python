@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
+"""
 This library offers an API to use Tacyt in a python environment.
 Copyright (C) 2015 Eleven Paths
-'''
+"""
 try:
     import simplejson as json
-
 except ImportError:
     import json
 
+
 json_encode = lambda x: json.dumps(x)
 json_decode = lambda x: json.loads(x)
+
 
 class ExternalApiTagRequest:
 

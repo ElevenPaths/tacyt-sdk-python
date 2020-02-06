@@ -8,6 +8,7 @@ from authorization.Response import Response
 from tacyt.Version import Version
 import Error
 
+
 class Auth(object):
 
     API_PORT = 443
@@ -41,19 +42,19 @@ class Auth(object):
     THREAD_POOL_SIZE = 10
 
     def __init__(self, appId, secretKey):
-        '''
+        """
         Create an instance of the class with the Application ID and secret obtained from Tacyt
         @param $appId
         @param $secretKey
-        '''
+        """
         self.appId = appId
         self.secretKey = secretKey
 
     @staticmethod
     def set_host(host):
-        '''
+        """
         @param $host The host to be connected with (http://hostname) or (https://hostname)
-        '''
+        """
         if host.startswith("http://"):
 
             Version.API_HOST = host[len("http://"):]
@@ -67,23 +68,23 @@ class Auth(object):
 
     @staticmethod
     def set_proxy(proxy, port):
-        '''
+        """
         Enable using a Proxy to connect through
         @param $proxy The proxy server
         @param $port The proxy port number
-        '''
+        """
         Auth.API_PROXY = proxy
         Auth.API_PROXY_PORT = port
 
     @staticmethod
     def get_part_from_header(part, header):
-        '''
+        """
         The custom header consists of three parts, the method, the appId and the signature.
         This method returns the specified part if it exists.
         @param $part The zero indexed part to be returned
         @param $header The HTTP header value from which to extract the part
         @return string the specified part from the header or an empty string if not existent
-        '''
+        """
         if header:
             parts = header.split(Auth.AUTHORIZATION_HEADER_FIELD_SEPARATOR)
             if len(parts) >= part:
@@ -92,10 +93,10 @@ class Auth(object):
 
     @staticmethod
     def get_auth_method_from_header(authorization_header):
-        '''
+        """
         @param $authorization_header authorization HTTP Header
         @return string the authorization method. Typical values are "Basic", "Digest" or "11PATHS"
-        '''
+        """
         return Auth.get_part_from_header(0, authorization_header)
 
     @staticmethod
@@ -148,7 +149,7 @@ class Auth(object):
     def http_post_proxy(self, url, data=None, body=None):
         try:
             if data is not None:
-                return self.http_post(self.get_api_host() + url, self.authentication_headers(self.HTTP_METHOD_POST,url,None,data),data)
+                return self.http_post(self.get_api_host() + url, self.authentication_headers(self.HTTP_METHOD_POST, url, None, data), data)
 
             elif body is not None:
                 return self.http_post(self.get_api_host() + url, self.authentication_headers_with_body(self.HTTP_METHOD_POST, url, None, body), body)
@@ -156,10 +157,10 @@ class Auth(object):
         except:
             return None
 
-    def http_put_proxy(self,url,data=None,body=None):
+    def http_put_proxy(self, url, data=None, body=None):
         try:
             if data is not None:
-                return self.http_put(self.get_api_host() + url, self.authentication_headers(self.HTTP_METHOD_PUT,url,None,data),data)
+                return self.http_put(self.get_api_host() + url, self.authentication_headers(self.HTTP_METHOD_PUT, url, None, data), data)
 
             elif body is not None:
                 return self.http_put(self.get_api_host() + url, self.authentication_headers_with_body(self.HTTP_METHOD_PUT, url, None, body), body)
@@ -168,35 +169,35 @@ class Auth(object):
 
     @staticmethod
     def get_appId_from_header(authorization_header):
-        '''
+        """
         @param $authorization_header authorization HTTP Header
         @return string the requesting application Id. Identifies the application using the API
-        '''
+        """
         return Auth.get_part_from_header(1, authorization_header)
 
     @staticmethod
     def get_signature_from_header(authorization_header):
-        '''
+        """
         @param $authorization_header authorization HTTP Header
         @return string the signature of the current request. Verifies the identity of the application using the API
-        '''
+        """
         return Auth.get_part_from_header(2, authorization_header)
 
     @staticmethod
     def get_current_UTC():
-        '''
+        """
         @return a string representation of the current time in UTC to be used in a Date HTTP Header
-        '''
+        """
         return time.strftime(Auth.UTC_STRING_FORMAT, time.gmtime())
 
     def _http(self, method, url, x_headers=None, body=None, file=None, content_type=None):
-        '''
+        """
         HTTP Request to the specified API endpoint
         @param method string
         @param x_headers list
         @param body dict json
         @return TacytResponse
-        '''
+        """
 
         auth_headers = None
         json_body = None
@@ -205,12 +206,12 @@ class Auth(object):
             # Try to use the new Python3 HTTP library if available
             import http.client as http
             import urllib.parse as urllib
-        except:
+        except ImportError:
             # Must be using Python2 so use the appropriate library
             import httplib as http
             import urllib
 
-        if Auth.API_PROXY != None:
+        if Auth.API_PROXY is not None:
             if Auth.API_HTTPS:
                 conn = http.HTTPSConnection(Auth.API_PROXY, Auth.API_PROXY_PORT)
                 conn.set_tunnel(Version.API_HOST, Auth.API_PORT)
@@ -222,7 +223,6 @@ class Auth(object):
                 conn = http.HTTPSConnection(Version.API_HOST, Auth.API_PORT)
             else:
                 conn = http.HTTPConnection(Version.API_HOST, Auth.API_PORT)
-
 
         if self.HTTP_METHOD_GET == method or self.HTTP_METHOD_DELETE == method:
             auth_headers = self.authentication_headers(method, url, x_headers, None, None)
@@ -247,20 +247,17 @@ class Auth(object):
 
             conn.close()
             ret = Response(json_string=response_data)
-
-        except Exception, e:
-            print "Exception"
-            print e
-            print repr(e)
+        except Exception as e:
+            logging.error("Unexpected error in _http method", exc_info=True)
             ret = None
 
         return ret
 
     def sign_data(self, data):
-        '''
+        """
         @param $data the string to sign
         @return string base64 encoding of the HMAC-SHA1 hash of the data parameter using {@code secretKey} as cipher key.
-        '''
+        """
         from hashlib import sha1
         import hmac
         import binascii
@@ -269,14 +266,14 @@ class Auth(object):
         return binascii.b2a_base64(sha1_hash.digest())[:-1].decode('utf8')
 
     def authentication_headers(self, http_method, query_string, x_headers=None, utc=None, params=None):
-        '''
+        """
         Calculate the authentication headers to be sent with a request to the API
         @param $http_method the HTTP Method
         @param $query_string the urlencoded string including the path (from the first forward slash) and the parameters
         @param $x_headers HTTP headers specific to the 11-paths API. null if not needed.
         @param $utc the Universal Coordinated Time for the Date HTTP header
         @return array a map with the authorization and Date headers needed to sign a Tacyt API request
-        '''
+        """
 
         if not utc:
             utc = Auth.get_current_UTC()
@@ -329,7 +326,7 @@ class Auth(object):
             if x_headers is None:
                 x_headers = dict()
             else:
-                for key,value in x_headers.items():
+                for key, value in x_headers.items():
                     headers[key] = value
 
             x_headers[Auth.BODY_HASH_HEADER_NAME] = body_hash
@@ -359,11 +356,11 @@ class Auth(object):
         return headers
 
     def get_serialized_headers(self, x_headers):
-        '''
+        """
         Prepares and returns a string ready to be signed from the 11-paths specific HTTP headers received
         @param $x_headers a non neccesarily ordered map (array without duplicates) of the HTTP headers to be ordered.
         @return string The serialized headers, an empty string if no headers are passed, or None if there's a problem such as non 11paths specific headers
-        '''
+        """
         if x_headers:
             headers = dict((k.lower(), v) for k, v in x_headers.iteritems())
 
@@ -394,6 +391,7 @@ class Auth(object):
             # Must be using Python2 so use the appropriate library
             import httplib as http
             import urllib
+
         if params:
             serialized_params = ""
             for key in sorted(params):
@@ -407,15 +405,12 @@ class Auth(object):
 
     def http_post(self, url, headers, data=None, body=None):
         if data is not None:
-            return self._http(self.HTTP_METHOD_POST,url,  headers, data)
+            return self._http(self.HTTP_METHOD_POST, url, headers, data)
         elif body:
-            return self._http(self.HTTP_METHOD_POST,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
+            return self._http(self.HTTP_METHOD_POST, url, headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
 
     def http_post_file(self, url, headers, file_stream, file_name, tag_name):
-        try:
-            import requests
-        except Exception:
-            return Response(error=Error.Error({"code":"-1","message":"The Python \"requests\" library was not found. Please, install it before call the upload method."}))
+        import requests
 
         files = {'file': (file_name, file_stream, 'application/octet-stream')}
         if Auth.API_HTTPS:
@@ -441,6 +436,6 @@ class Auth(object):
 
     def http_put(self, url, headers, data=None, body=None):
         if data is not None:
-            return self._http(self.HTTP_METHOD_PUT,url,  headers, data)
+            return self._http(self.HTTP_METHOD_PUT, url, headers, data)
         elif body is not None:
-            return self._http(self.HTTP_METHOD_PUT,url,  headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
+            return self._http(self.HTTP_METHOD_PUT, url, headers, body, None, self.HTTP_HEADER_CONTENT_TYPE_JSON)
