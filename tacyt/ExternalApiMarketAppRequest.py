@@ -60,11 +60,8 @@ class ExternalApiMarketUpdateAppRequest:
             "origin": self.origin,
         }
 
-        if "app_url" in self.extra_arguments:
-            json_dict["appURL"] = self.extra_arguments.pop("app_url")
-
         for field_name in self.extra_arguments:
-            camel_case_name = to_camel_case(field_name)
+            camel_case_name = self._to_camel_case(field_name)
             json_dict[camel_case_name] = self.extra_aguments[field_name]
         return json_dict
 
