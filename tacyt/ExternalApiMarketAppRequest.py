@@ -67,3 +67,4 @@ class ExternalApiMarketUpdateAppRequest:
             camel_case_name = to_camel_case(field_name)
             json_dict[camel_case_name] = self.extra_aguments[field_name]
         return json_dict
+
