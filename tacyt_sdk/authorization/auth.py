@@ -4,8 +4,6 @@ import hashlib
 import hmac
 import logging
 from hashlib import sha1
-from urllib.error import HTTPError
-
 import requests
 
 from tacyt_sdk.authorization.response import Response
@@ -24,7 +22,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-class Auth:
+class Auth(object):
     AUTHORIZATION_METHOD = "11PATHS"
     X_11PATHS_HEADER_PREFIX = "X-11paths-"
     BODY_HASH_HEADER_NAME = X_11PATHS_HEADER_PREFIX + "Body-Hash"
@@ -44,7 +42,7 @@ class Auth:
     AUTHORIZATION_HEADER_NAME = "Authorization"
     DATE_HEADER_NAME = X_11PATHS_HEADER_PREFIX + "Date"
 
-    def __init__(self, app_id, secret_key, proxy=None, use_https=True):
+    def __init__(self, app_id, secret_key, proxy=None):
         """Create an instance of the class with the Application ID and
         secret obtained from Tacyt
         :param app_id: the app id part of your credentials
@@ -52,8 +50,6 @@ class Auth:
         """
         self.app_id = app_id
         self.secret_key = secret_key
-        self.use_https = use_https
-        self.api_host = Version.API_HOST
         self.proxy = None
         if proxy:
             self.proxy = {"http": proxy, "https": proxy}
@@ -75,7 +71,8 @@ class Auth:
         :param http_method: the HTTP Method
         :param query_string: the urlencoded string including the path
         (from the first forward slash) and the parameters
-        :param headers: HTTP headers specific to the 11-paths API. null if not
+        :param headers: HTTP headers specific to the 11-paths API, excluding
+        X-11Paths-Date.
         needed.
         :param utc: the Universal Coordinated Time for the Date HTTP header
         :return: A dictionary with the authorization and Date headers needed
@@ -83,6 +80,7 @@ class Auth:
         """
 
         utc = utc.strip() if utc else get_current_utc()
+        headers = headers or {}
 
         if body:
             body_hash = hashlib.sha1(str(body)).hexdigest()
@@ -90,11 +88,11 @@ class Auth:
 
         string_to_sign = "{http_method}\n{utc_date}\n{serialized_headers}" \
                          "\n{encoded_url}"
-        string_to_sign.format(
-            method=http_method.upper().strip(),
+        string_to_sign = string_to_sign.format(
+            http_method=http_method.upper().strip(),
             utc_date=utc,
             serialized_headers=self.get_serialized_headers(headers),
-            encoded_url=query_string
+            encoded_url=query_string.strip()
         )
         authorization_header = (
             Auth.AUTHORIZATION_METHOD +
@@ -104,8 +102,8 @@ class Auth:
             self.sign_data(string_to_sign)
         )
 
-        headers[Auth.AUTHORIZATION_HEADER_NAME] = authorization_header
         headers[Auth.DATE_HEADER_NAME] = utc
+        headers[Auth.AUTHORIZATION_HEADER_NAME] = authorization_header
         return headers
 
     @staticmethod
@@ -116,10 +114,13 @@ class Auth:
         :return: The serialized headers.
         :rtype: str
         """
+        x_headers = x_headers or {}
+        x_headers = {key.lower(): value for key, value in x_headers.items()}
         auth_headers = sorted(filter(
-            lambda item: item[0].startswith(Auth.X_11PATHS_HEADER_PREFIX),
+            lambda item: item[0].startswith(Auth.X_11PATHS_HEADER_PREFIX.lower()),
             x_headers.items()))
-        return " ".join([key + " - " + value for key, value in auth_headers])
+        return " ".join([(key.lower() + Auth.X_11PATHS_HEADER_SEPARATOR + value)
+                         for key, value in auth_headers])
 
     def compose_url(self, url):
         """Compose the final url with the schema and the host of
@@ -128,10 +129,9 @@ class Auth:
         :type url: str
         :return: A full composed http(s) url to call.
         """
-        url = "https://" + self.api_host + url
-        if not self.use_https:
-            url = "https://" + self.api_host + url
-        return url
+        # self.api_host = Version.API_HOST
+        # print(Version.API_HOST)
+        return "https://" + Version.API_HOST + url
 
     def http_get(self, url, headers=None):
         """Get method
@@ -141,13 +141,15 @@ class Auth:
         """
         response = None
         try:
+            print(headers)
             auth_headers = self.authentication_headers(self.HTTP_METHOD_GET,
                                                        url, headers)
             api_url = self.compose_url(url)
-            res = requests.get(api_url, headers=auth_headers, proxies=self.proxy)
+            res = requests.get(api_url, headers=auth_headers,
+                               proxies=self.proxy)
             res.raise_for_status()
             response = Response(json_string=res.content)
-        except HTTPError as e:
+        except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response
 
@@ -160,14 +162,17 @@ class Auth:
         """
         response = None
         try:
+            import json
+            body2 = json.dumps(body)
             auth_headers = self.authentication_headers(self.HTTP_METHOD_POST,
-                                                       url, headers)
+                                                       url, headers, body=body2)
             api_url = self.compose_url(url)
+            auth_headers["Content-Type"] = "application/json"
             res = requests.post(api_url, headers=auth_headers, json=body,
                                 proxies=self.proxy)
             res.raise_for_status()
             response = Response(json_string=res.content)
-        except HTTPError as e:
+        except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response
 
@@ -187,7 +192,7 @@ class Auth:
                                proxies=self.proxy)
             res.raise_for_status()
             response = Response(json_string=res.content)
-        except HTTPError as e:
+        except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response
 
@@ -204,10 +209,10 @@ class Auth:
         try:
             files = {'file': (file_name, file_stream, 'application/octet-stream')}
             api_url = self.compose_url(url)
-            res = requests.post(api_url, headers=headers, files=files, data=data,
-                                proxies=self.proxy)
+            res = requests.post(api_url, headers=headers, files=files,
+                                data=data, proxies=self.proxy)
             res.raise_for_status()
             response = Response(json_string=res.content)
-        except HTTPError as e:
+        except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response

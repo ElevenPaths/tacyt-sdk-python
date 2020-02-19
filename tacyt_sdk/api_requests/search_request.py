@@ -30,14 +30,14 @@ class SearchRequest:
 
     def as_dict(self):
         data = dict()
-        if self.query is not None:
+        if self.query:
             data["query"] = self.query
-        if self.number_page is not None:
+        if self.number_page:
             data["numberPage"] = self.number_page
-        if self.max_results is not None:
+        if self.max_results:
             data["maxResults"] = self.max_results
-        if self.output_fields is not None:
+        if self.output_fields:
             data["outputFields"] = self.output_fields
-        if self.grouped is not None:
+        if self.grouped:
             data["grouped"] = self.grouped
         return data

@@ -29,13 +29,13 @@ class TacytClient(Auth):
     API_UPLOADURL_URL = "/api/" + Version.API_VERSION + "/uploadURL"
     API_MARKET_URL = "/api/" + Version.API_VERSION + "/app"
 
-    def __init__(self, app_id, secret_key):
+    def __init__(self, app_id, secret_key, proxy=None):
         """Create an instance of the class with the Application ID and secret
          obtained from Tacyt.
         :param app_id: the app id part of your credentials
         :param secret_key: the secret part of your credentials
         """
-        super(TacytClient, self).__init__(app_id, secret_key)
+        super(TacytClient, self).__init__(app_id, secret_key, proxy=proxy)
 
     def search_apps(self, query, number_page=None, max_results=None,
                     outfields=None, grouped=None):
@@ -98,7 +98,7 @@ class TacytClient(Auth):
     def delete_tag(self, tag):
         """This method delete a tag.
         :param tag: the name of the tag you want to delete
-        :return:
+        :return: A response object.
         """
         result = TagRequest(TagRequest.REMOVE_ALL_REQUEST, tag, None)
         return self.http_post(self.API_TAGS_URL, body=result.as_dict())
@@ -106,7 +106,7 @@ class TacytClient(Auth):
     def create_filter(self, filter_):
         """This method create a filter.
         :param filter_:
-        :return: Filter structure
+        :return: Response object with the filter structure
         """
         result = FilterRequest(FilterRequest.CREATE_REQUEST, filter_, 0, None)
         return self.http_post(self.API_FILTERS_URL, body=result.as_dict())
@@ -163,8 +163,9 @@ class TacytClient(Auth):
 
     def list_detected_apps(self, page, filter_id):
         """Get the detected apps by a filter.
+        :param page:
         :param filter_id: id to the filter.
-        :return: Json structure with the details of applications detected by
+        :return: Response object with the details of applications detected by
         the filter.
         """
         result = FilterRequest(FilterRequest.LIST_DETECTIONS_REQUEST,
@@ -176,7 +177,7 @@ class TacytClient(Auth):
         :param page: A number greater or equal to 1 indicating the page of
         results which have to be retrieved
         :param group_name: name of the group
-        :return: Json structure with the details of applications detected by
+        :return: Response object with the details of applications detected by
         the filters group
         """
         result = FilterRequest(FilterRequest.LIST_GROUP_DETECTIONS, None, page,
@@ -203,7 +204,7 @@ class TacytClient(Auth):
     def get_rss_info(self, filter_id):
         """This method get the RSS information of a filter.
         :param filter_id: id to filter you want get RSS information
-        :return:
+        :return: Response object with the information of a filter.
         """
         result = FilterRequest(FilterRequest.GET_RSS_REQUEST, None, None,
                                filter_id)
@@ -213,10 +214,11 @@ class TacytClient(Auth):
         """This method get the RSS information of a filters group
         :param group_name: name of the filters group you want get RSS
         information.
-        :return:
+        :return: Response object with the rss information of the filters
+        of a group.
         """
         result = FilterRequest(FilterRequest.GET_GROUP_RSS, None, None,
-                               group_name)
+                               content=group_name)
         return self.http_post(self.API_FILTERS_URL, body=result.as_dict())
 
     def compare_apps(self, apps, include_details):
@@ -226,7 +228,7 @@ class TacytClient(Auth):
         :param include_details: with a value of true in $include_details
         you will get not only the matching fields and their values
         but all the values defined for the applications.
-        :return:
+        :return: Response object with the comparison between the apps.
         """
         result = CompareRequest(apps, include_details)
         return self.http_post(self.API_COMPARER_URL, body=result.as_dict())
@@ -235,7 +237,7 @@ class TacytClient(Auth):
         """Upload an app file to Tacyt
         :param tag_name: an optional tag to labeled the uploaded app.
         :param app_path: path to file apk
-        :return: Response
+        :return: Response object.
         """
         app_file = open(app_path, 'rb')
         file_name = path.basename(app_file.name)
@@ -274,7 +276,7 @@ class TacytClient(Auth):
         """Download apps from a market URLs
         :param urls:  List of urls to upload
         :param tag_names List of tags to identify the application
-        :return: Response
+        :return: Response object
         """
         upload_data = UploadUrlRequest(urls, tag_names)
         return self.http_post(self.API_UPLOADURL_URL, headers=None,
@@ -293,7 +295,7 @@ class TacytClient(Auth):
         Example: applicationType should be application_type
         :param extra_parameters: a dictionary with extra parameters allowed by
         the api endpoint in snake_case.
-        :return: TacytResponse
+        :return: Response object with the information created for the app.
         """
         external_market_app = NewMarketAppRequest(
             unique_origin_id=unique_origin_id,
@@ -319,7 +321,7 @@ class TacytClient(Auth):
         Example: applicationType should be application_type
         :param extra_parameters: a dictionary with extra parameters allowed by
         the api endpoint in snake_case.
-        :return: TacytResponse
+        :return: Response object with the latest information for the app.
         """
         external_market = UpdateMarketAppRequest(
             unique_origin_id=unique_origin_id,

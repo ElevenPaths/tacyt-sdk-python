@@ -6,7 +6,7 @@ Copyright (C) 2015 Eleven Paths
 import json
 
 
-class Error:
+class Error(object):
     def __init__(self, error_data):
         self.code = error_data['code']
         self.message = error_data['message']

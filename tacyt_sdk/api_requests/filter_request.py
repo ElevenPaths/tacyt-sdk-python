@@ -37,23 +37,27 @@ class FilterRequest:
     LIST_GROUP_DETECTIONS = "LIST_GROUP_DETECTIONS"
     GET_GROUP_RSS = "GET_GROUP_RSS"
 
-    def __init__(self, request_type=None, filter_=None, page=None, content=None):
+    def __init__(self, request_type=None, filter_=None, page=None,
+                 content=None):
         self.request_type = request_type
         self.content = content
-        self.page = page if page > 1 and page is not None else 1
+        self.page = page if page else 1
         self.filter_ = filter_
 
     def as_dict(self):
         data = dict()
 
-        if self.request_type is not None:
+        if self.request_type:
             data["requestType"] = self.request_type
 
-        if self.filter_ is not None:
+        if self.filter_:
             data["filter"] = self.filter_.as_dict()
 
-        if self.page is not None:
+        if self.page:
             data["page"] = self.page
+
+        if self.content:
+            data["content"] = self.content
 
         if len(json.dumps(data)) > self.FILTER_MAX_SIZE:
             raise ValueError(self.ERROR_LIMIT_EXCEEDED)

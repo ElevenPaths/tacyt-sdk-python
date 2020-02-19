@@ -4,16 +4,15 @@
 """
 
 
-class Rule:
-    def __init__(self, weight=None, content=None):
-        self.weight = weight
-        self.content = content
+class Filter(object):
+    class Rule(object):
+        def __init__(self, weight=None, content=None):
+            self.weight = weight
+            self.content = content
 
-    def as_dict(self):
-        return {"weight": self.weight, "content": self.content}
+        def as_dict(self):
+            return {"weight": self.weight, "content": self.content}
 
-
-class Filter:
     PUBLIC_VISIBILITY = "PUBLIC"
     PRIVATE_VISIBILITY = "PRIVATE"
 

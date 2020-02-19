@@ -11,7 +11,7 @@ from tacyt_sdk.authorization.error import Error
 from tacyt_sdk.version import Version
 
 
-class Response:
+class Response(object):
     """This class models a response from any of the endpoints in the Tacyt API.
     It consists of a "data" and an "error" elements. Although normally only one
     of them will be present, they are not mutually exclusive, since errors can
@@ -29,8 +29,8 @@ class Response:
         except ValueError:
             content = {}
 
-        self.data = content.get("data", None)
-        self.error = None
+        self.data = content.get("data", "")
+        self.error = ""
         if "error" in content:
             self.error = Error(content["error"])
 
