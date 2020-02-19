@@ -11,6 +11,8 @@ from tacyt_sdk.api_requests.search_request import SearchRequest
 from tacyt_sdk.api_requests.tag_request import TagRequest
 from tacyt_sdk.api_requests.upload_url_request import UploadUrlRequest
 from tacyt_sdk.authorization.auth import Auth
+from tacyt_sdk.authorization.error import Error
+from tacyt_sdk.authorization.response import Response
 from tacyt_sdk.filter_model import Filter
 from tacyt_sdk.version import Version
 
@@ -239,20 +241,23 @@ class TacytClient(Auth):
         :param app_path: path to file apk
         :return: Response object.
         """
-        app_file = open(app_path, 'rb')
-        file_name = path.basename(app_file.name)
-        file_stream = app_file.read()
-        app_file.close()
-        headers = dict()
-        headers[Auth.FILE_HASH_HEADER_NAME] = hashlib.sha1(file_stream).hexdigest()
-        return self.http_post_file(
-            self.API_UPLOAD_URL,
-            self.authentication_headers(self.HTTP_METHOD_POST,
-                                        self.API_UPLOAD_URL,
-                                        headers),
-            file_stream,
-            file_name,
-            data={"tagName": tag_name})
+        try:
+            with open(app_path, "rb") as apk_file:
+                file_name = path.basename(app_path)
+                file_stream = apk_file.read()
+                headers = {
+                    Auth.FILE_HASH_HEADER_NAME: hashlib.sha1(file_stream).hexdigest()
+                }
+                response = self.http_post_file(
+                    self.API_UPLOAD_URL,
+                    headers,
+                    file_stream,
+                    file_name,
+                    data={"tagName": tag_name})
+        except IOError as e:
+            logger.error(e.message, exc_info=True)
+            response = None
+        return response
 
     def get_engine_version(self, date=None, engine_id=None, lang=None):
         """Search an engine and its associated vulnerabilities.

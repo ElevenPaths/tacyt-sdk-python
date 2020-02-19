@@ -129,15 +129,14 @@ class Auth(object):
         :type url: str
         :return: A full composed http(s) url to call.
         """
-        # self.api_host = Version.API_HOST
-        # print(Version.API_HOST)
         return "https://" + Version.API_HOST + url
 
     def http_get(self, url, headers=None):
-        """Get method
-        :param url:
-        :param headers:
-        :return:
+        """Perform a get request to the api endpoint
+        :param url: the api endpoint to perform the request including the
+        query params needed.
+        :param headers: extra headers if needed to pass throw the requests.
+        :return: a Response object with the result
         """
         response = None
         try:
@@ -147,18 +146,18 @@ class Auth(object):
             api_url = self.compose_url(url)
             res = requests.get(api_url, headers=auth_headers,
                                proxies=self.proxy)
-            res.raise_for_status()
             response = Response(json_string=res.content)
+            res.raise_for_status()
         except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response
 
     def http_post(self, url, headers=None, body=None):
-        """
-        :param url:
-        :param headers:
-        :param body:
-        :return:
+        """Perform a POST request to the api endpoint
+        :param url: the api endpoint to perform the request
+        :param headers: extra headers if needed to pass throw the requests
+        :param body: the data that should be included in the POST call
+        :return: a Response object with the result
         """
         response = None
         try:
@@ -170,18 +169,18 @@ class Auth(object):
             auth_headers["Content-Type"] = "application/json"
             res = requests.post(api_url, headers=auth_headers, json=body,
                                 proxies=self.proxy)
-            res.raise_for_status()
             response = Response(json_string=res.content)
+            res.raise_for_status()
         except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response
 
     def http_put(self, url, headers=None, body=None):
-        """
-        :param url:
-        :param headers:
-        :param body:
-        :return:
+        """Perform a PUT request to the api endpoint
+        :param url: the api endpoint to perform the request
+        :param headers: extra headers if needed to pass throw the requests
+        :param body: the data that should be included in the PUT call
+        :return: a Response object with the result
         """
         response = None
         try:
@@ -190,29 +189,33 @@ class Auth(object):
             api_url = self.compose_url(url)
             res = requests.put(api_url, headers=auth_headers, json=body,
                                proxies=self.proxy)
-            res.raise_for_status()
             response = Response(json_string=res.content)
+            res.raise_for_status()
         except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response
 
     def http_post_file(self, url, headers, file_stream, file_name, data=None):
-        """
-        :param url:
-        :param headers:
-        :param file_stream:
-        :param file_name:
-        :param data:
-        :return:
+        """Method to help to upload a file to the api
+        :param url: the endpoint that will perform the upload
+        :param headers: extra headers to include to the requests if needed
+        :param file_stream: the data of the file
+        :param file_name: the name of the file
+        :param data: extra data if its required
+        :return: a Response object with the result
         """
         response = None
         try:
-            files = {'file': (file_name, file_stream, 'application/octet-stream')}
+            headers = self.authentication_headers(self.HTTP_METHOD_POST,
+                                                  self.API_UPLOAD_URL,
+                                                  headers)
+            files = {'file': (file_name, file_stream,
+                              'application/octet-stream')}
             api_url = self.compose_url(url)
             res = requests.post(api_url, headers=headers, files=files,
-                                data=data, proxies=self.proxy)
-            res.raise_for_status()
+                                json=data, proxies=self.proxy)
             response = Response(json_string=res.content)
+            res.raise_for_status()
         except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
         return response

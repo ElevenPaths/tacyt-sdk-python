@@ -19,11 +19,6 @@ class Response(object):
     in the data field and at the same time inform of an error.
     """
     def __init__(self, json_string=None):
-        """
-        :param json_string: a valid json received from of the methods of the
-        Tacyt API
-        :type json_string: str
-        """
         try:
             content = json.loads(json_string)
         except ValueError:
