@@ -5,7 +5,7 @@ Copyright (C) 2020 Eleven Paths
 from tacyt_sdk.utils import to_camel_case
 
 
-class NewMarketAppRequest:
+class NewMarketAppRequest(object):
     def __init__(self, unique_origin_id, unique_version_id, platform,
                  origin, title, app_url, **extra_arguments):
         self.unique_origin_id = unique_origin_id

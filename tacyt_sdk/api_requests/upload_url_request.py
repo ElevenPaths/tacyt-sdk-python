@@ -4,7 +4,7 @@ Copyright (C) 2019 Eleven Paths
 """
 
 
-class UploadUrlRequest:
+class UploadUrlRequest(object):
     def __init__(self, urls, tag_names=None):
         self.urls = urls
         self.tag_names = tag_names

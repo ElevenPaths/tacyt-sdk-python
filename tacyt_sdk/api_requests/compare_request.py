@@ -1,10 +1,10 @@
 """
 This library offers an API to use Tacyt in a python environment.
-Copyright (C) 2015 Eleven Paths
+Copyright (C) 2015-2020 Eleven Paths
 """
 
 
-class CompareRequest:
+class CompareRequest(object):
     FIELD_MATCHING_FIELDS = "matchingFields"
     FIELD_MATCHING_QUERY = "matchingQuery"
     FIELD_APPS = "apps"

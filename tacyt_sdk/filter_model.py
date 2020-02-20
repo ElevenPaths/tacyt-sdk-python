@@ -1,6 +1,6 @@
 """
  This library offers an API to use Tacyt in a python environment.
- Copyright (C) 2015 Eleven Paths
+ Copyright (C) 2015-2020 Eleven Paths
 """
 
 
@@ -16,9 +16,9 @@ class Filter(object):
     PUBLIC_VISIBILITY = "PUBLIC"
     PRIVATE_VISIBILITY = "PRIVATE"
 
-    def __init__(self, id_=None, name=None, description=None, weight=None,
+    def __init__(self, filter_id=None, name=None, description=None, weight=None,
                  visibility=None, rules=None, groups=None):
-        self.id_ = id_
+        self.filter_id = filter_id
         self.name = name
         self.description = description
         self.weight = weight
@@ -27,7 +27,7 @@ class Filter(object):
         self.groups = groups
 
     def as_dict(self):
-        result = {"id": self.id_,
+        result = {"id": self.filter_id,
                   "name": self.name,
                   "description": self.description,
                   "weight": self.weight,

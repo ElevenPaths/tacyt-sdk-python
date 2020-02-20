@@ -82,8 +82,7 @@ class TacytClient(Auth):
         @return A list of applications associates with a tag.
         """
         result = TagRequest(TagRequest.CREATE_REQUEST, tag, app_keys)
-        return self.http_post(self.API_TAGS_URL,
-                              body=result.as_dict())
+        return self.http_post(self.API_TAGS_URL, body=result.as_dict())
 
     def remove_tag_for_apps(self, tag, app_keys):
         """This method remove a tag associate with applications.
@@ -92,8 +91,7 @@ class TacytClient(Auth):
         :return:
         """
         result = TagRequest(TagRequest.REMOVE_REQUEST, tag, app_keys)
-        return self.http_post(self.API_TAGS_URL,
-                              body=result.as_dict())
+        return self.http_post(self.API_TAGS_URL, body=result.as_dict())
 
     def delete_tag(self, tag):
         """This method delete a tag.
@@ -307,7 +305,7 @@ class TacytClient(Auth):
             origin=origin,
             title=title,
             app_url=app_url,
-            extra_parameters=extra_parameters)
+            **extra_parameters)
         return self.http_post(self.API_MARKET_URL, headers=None,
                               body=external_market_app.as_dict())
 
@@ -333,6 +331,6 @@ class TacytClient(Auth):
             origin=origin,
             title=title,
             app_url=app_url,
-            extra_parameters=extra_parameters)
+            **extra_parameters)
         return self.http_put(self.API_MARKET_URL, headers=None,
                              body=external_market.as_dict())

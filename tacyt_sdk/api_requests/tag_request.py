@@ -1,6 +1,6 @@
 """
 This library offers an API to use Tacyt in a python environment.
-Copyright (C) 2015 Eleven Paths
+Copyright (C) 2015-2020 Eleven Paths
 """
 try:
     import simplejson as json
@@ -8,7 +8,7 @@ except ImportError:
     import json
 
 
-class TagRequest:
+class TagRequest(object):
     LIST_REQUEST = "LIST"
     CREATE_REQUEST = "CREATE"
     REMOVE_REQUEST = "REMOVE"

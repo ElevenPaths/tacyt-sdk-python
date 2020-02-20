@@ -1,6 +1,6 @@
 """
 This library offers an API to use Tacyt in a python environment.
-Copyright (C) 2015 Eleven Paths
+Copyright (C) 2015-2020 Eleven Paths
 """
 try:
     from StringIO import StringIO
@@ -8,7 +8,7 @@ except ImportError:
     from io import StringIO
 
 
-class SearchRequest:
+class SearchRequest(object):
     DEFAULT_NUMBER_PAGE = 1
     DEFAULT_MAX_RESULTS = 20
 

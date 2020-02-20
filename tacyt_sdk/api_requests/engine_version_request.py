@@ -8,7 +8,7 @@ except ImportError:
 from tacyt_sdk.utils import datetime_isoformat
 
 
-class EngineVersionRequest:
+class EngineVersionRequest(object):
     def __init__(self, date, engine_id, lang):
         converted_date = date
         if isinstance(date, datetime):

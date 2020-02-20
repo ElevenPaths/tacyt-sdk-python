@@ -2,6 +2,7 @@
 import binascii
 import hashlib
 import hmac
+import json
 import logging
 from hashlib import sha1
 import requests
@@ -74,6 +75,7 @@ class Auth(object):
         :param headers: HTTP headers specific to the 11-paths API, excluding
         X-11Paths-Date.
         needed.
+        :param body: the data that will be in the http request.
         :param utc: the Universal Coordinated Time for the Date HTTP header
         :return: A dictionary with the authorization and Date headers needed
         to sign a Tacyt API request
@@ -140,7 +142,6 @@ class Auth(object):
         """
         response = None
         try:
-            print(headers)
             auth_headers = self.authentication_headers(self.HTTP_METHOD_GET,
                                                        url, headers)
             api_url = self.compose_url(url)
@@ -161,10 +162,12 @@ class Auth(object):
         """
         response = None
         try:
-            import json
-            body2 = json.dumps(body)
-            auth_headers = self.authentication_headers(self.HTTP_METHOD_POST,
-                                                       url, headers, body=body2)
+            json_body = json.dumps(body)
+            auth_headers = self.authentication_headers(
+                self.HTTP_METHOD_POST,
+                url,
+                headers,
+                body=json_body)
             api_url = self.compose_url(url)
             auth_headers["Content-Type"] = "application/json"
             res = requests.post(api_url, headers=auth_headers, json=body,
@@ -207,7 +210,7 @@ class Auth(object):
         response = None
         try:
             headers = self.authentication_headers(self.HTTP_METHOD_POST,
-                                                  self.API_UPLOAD_URL,
+                                                  url,
                                                   headers)
             files = {'file': (file_name, file_stream,
                               'application/octet-stream')}
