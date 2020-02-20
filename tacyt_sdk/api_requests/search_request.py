@@ -15,10 +15,13 @@ class SearchRequest(object):
     def __init__(self, query=None, number_page=None, max_results=None,
                  output_fields=None, grouped=None):
         string_build = StringIO()
-        self.number_page = (number_page if number_page > 1
-                            else SearchRequest.DEFAULT_NUMBER_PAGE)
-        self.max_results = (max_results if max_results > 1
-                            else SearchRequest.DEFAULT_MAX_RESULTS)
+        self.number_page = (
+            number_page if number_page and number_page > 1
+            else SearchRequest.DEFAULT_NUMBER_PAGE)
+        self.max_results = (
+            max_results
+            if max_results and max_results > 1
+            else SearchRequest.DEFAULT_MAX_RESULTS)
 
         if output_fields:
             for field in output_fields:
