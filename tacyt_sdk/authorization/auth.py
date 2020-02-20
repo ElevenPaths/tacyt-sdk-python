@@ -6,6 +6,7 @@ import json
 import logging
 from hashlib import sha1
 import requests
+from tacyt_sdk.authorization.error import Error
 
 from tacyt_sdk.authorization.response import Response
 from tacyt_sdk.utils import get_current_utc
@@ -151,6 +152,9 @@ class Auth(object):
             res.raise_for_status()
         except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
+            if not response.error:
+                response.error = Error({"code": res.status_code,
+                                        "message": res.content})
         return response
 
     def http_post(self, url, headers=None, body=None):
@@ -176,6 +180,9 @@ class Auth(object):
             res.raise_for_status()
         except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
+            if not response.error:
+                response.error = Error({"code": res.status_code,
+                                        "message": res.content})
         return response
 
     def http_put(self, url, headers=None, body=None):
@@ -196,6 +203,9 @@ class Auth(object):
             res.raise_for_status()
         except requests.HTTPError as e:
             logger.error(e.message, exc_info=True)
+            if not response.error:
+                response.error = Error({"code": res.status_code,
+                                        "message": res.content})
         return response
 
     def http_post_file(self, url, headers, file_stream, file_name, data=None):
