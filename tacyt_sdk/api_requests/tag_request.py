@@ -16,7 +16,7 @@ class TagRequest(object):
 
     def __init__(self, request_type=None, tag=None, apps=None):
         self.request_type = request_type
-        self.tag = tag.strip().lower()
+        self.tag = tag.strip().lower() if tag else None
         self.apps = apps if apps else []
 
     def as_dict(self):
