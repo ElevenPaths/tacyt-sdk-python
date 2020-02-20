@@ -10,9 +10,10 @@ class Error(object):
     def __init__(self, error_data):
         self.code = error_data['code']
         self.message = error_data['message']
+        self.args = error_data.get("args", "")
 
     def as_dict(self):
-        return {"code": self.code, "message": self.message}
+        return {"code": self.code, "message": self.message, "args": self.args}
 
     def __repr__(self):
         return json.dumps(self.as_dict())

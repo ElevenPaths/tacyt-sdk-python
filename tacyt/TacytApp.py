@@ -22,9 +22,7 @@ class TacytApp(TacytClient):
         :param host: The host to be connected with (http://hostname)
          or (https://hostname)
         """
-        if host.startswith("http://"):
-            Version.API_HOST = host[len("http://"):]
-        elif host.startswith("https://"):
+        if host.startswith("https://"):
             Version.API_HOST = host[len("https://"):]
 
     @staticmethod

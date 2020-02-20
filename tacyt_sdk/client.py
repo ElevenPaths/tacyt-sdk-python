@@ -11,8 +11,6 @@ from tacyt_sdk.api_requests.search_request import SearchRequest
 from tacyt_sdk.api_requests.tag_request import TagRequest
 from tacyt_sdk.api_requests.upload_url_request import UploadUrlRequest
 from tacyt_sdk.authorization.auth import Auth
-from tacyt_sdk.authorization.error import Error
-from tacyt_sdk.authorization.response import Response
 from tacyt_sdk.filter_model import Filter
 from tacyt_sdk.version import Version
 

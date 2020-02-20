@@ -6,8 +6,10 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 def to_camel_case(field_name):
     """Transform a snake_case field to a camelCase field
-    :param field_name:
+    :param field_name: the fieldname in snake_case
+    :type field_name: str
     :return: a camelCase field
+    :rtype: str
     """
     name_parts = field_name.split("_")
     camel_case = "".join(char.capitalize() for char in name_parts[1:])
