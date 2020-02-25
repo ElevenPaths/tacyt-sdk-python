@@ -1,6 +1,6 @@
 """
 This library offers an API to use Tacyt in a python environment.
-Copyright (C) 2020 Eleven Paths
+Copyright (C) 2015 Eleven Paths
 """
 from tacyt_sdk.utils import to_camel_case
 

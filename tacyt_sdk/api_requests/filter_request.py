@@ -1,6 +1,6 @@
 """
 This library offers an API to use Tacyt in a python environment.
-Copyright (C) 2015-2020 Eleven Paths
+Copyright (C) 2015 Eleven Paths
 """
 try:
     import simplejson as json
@@ -37,12 +37,12 @@ class FilterRequest(object):
     LIST_GROUP_DETECTIONS = "LIST_GROUP_DETECTIONS"
     GET_GROUP_RSS = "GET_GROUP_RSS"
 
-    def __init__(self, request_type=None, filter_=None, page=None,
+    def __init__(self, request_type=None, filter_object=None, page=None,
                  content=None):
         self.request_type = request_type
         self.content = content
         self.page = page if page else 1
-        self.filter_ = filter_
+        self.filter_object = filter_object
 
     def as_dict(self):
         data = dict()
@@ -50,8 +50,8 @@ class FilterRequest(object):
         if self.request_type:
             data["requestType"] = self.request_type
 
-        if self.filter_:
-            data["filter"] = self.filter_.as_dict()
+        if self.filter_object:
+            data["filter"] = self.filter_object.as_dict()
 
         if self.page:
             data["page"] = self.page

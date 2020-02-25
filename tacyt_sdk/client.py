@@ -101,19 +101,21 @@ class TacytClient(Auth):
         result = TagRequest(TagRequest.REMOVE_ALL_REQUEST, tag, None)
         return self.http_post(self.API_TAGS_URL, body=result.as_dict())
 
-    def create_filter(self, filter_):
+    def create_filter(self, filter_object):
         """This method create a filter.
         :param filter_:
         :return: Response object with the filter structure
         """
-        result = FilterRequest(FilterRequest.CREATE_REQUEST, filter_, 0, None)
+        result = FilterRequest(FilterRequest.CREATE_REQUEST, filter_object,
+                               0, None)
         return self.http_post(self.API_FILTERS_URL, body=result.as_dict())
 
-    def update_filter(self, filter_):
+    def update_filter(self, filter_object):
         """This method update changes associates with a filter.
         :param filter_: Filter structure
         """
-        result = FilterRequest(FilterRequest.UPDATE_REQUEST, filter_, 0, None)
+        result = FilterRequest(FilterRequest.UPDATE_REQUEST, filter_object,
+                               0, None)
         return self.http_post(self.API_FILTERS_URL, body=result.as_dict())
 
     def read_group_filters(self):

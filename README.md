@@ -43,16 +43,16 @@ result_compare = tacyt_client.compare_apps(list_app_key, "true")
 
 result_tag = tacyt_client.list_tags()
 
-rule = filter.Filter.Rule('1', "contains(permissionName,\"SMS\")")
-filter_structure = filter.Filter("Apps SMS Permissions", "Apps which has sms permissions", 1, filter.Filter.PUBLIC_VISIBILITY, rule)
+rule = Filter.Rule('1', "contains(permissionName,\"SMS\")")
+filter_structure = Filter("Apps SMS Permissions", "Apps which has sms permissions", 1, filter.Filter.PUBLIC_VISIBILITY, rule)
 result_filter = tacyt_client.create_filter(filter_structure)
 
-result_get_rss = api.get_RSS_info(filter_id)
+result_get_rss = tacyt_client.get_RSS_info(filter_id)
 ```
 
 * Each Tacyt's API call has a response data where you can check the errors and the data of the response. 
 ```
-all_tags = api.list_tags()
+all_tags = tacyt_client.list_tags()
 all_tags.errors
 all_tags.data 
 ```

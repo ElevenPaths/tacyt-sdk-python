@@ -3,7 +3,8 @@ from setuptools import find_packages, setup
 install_requires = [
     'requests>=2.22.0',
     'simplejson>=3.13.2',
-    'Deprecated>=1.2.7'
+    'Deprecated>=1.2.7',
+    "six"
 ]
 
 

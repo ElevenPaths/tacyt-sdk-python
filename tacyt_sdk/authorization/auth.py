@@ -5,9 +5,11 @@ import hmac
 import json
 import logging
 from hashlib import sha1
-import requests
-from tacyt_sdk.authorization.error import Error
 
+import requests
+from six import ensure_binary
+
+from tacyt_sdk.authorization.error import Error
 from tacyt_sdk.authorization.response import Response
 from tacyt_sdk.utils import get_current_utc
 from tacyt_sdk.version import Version
@@ -63,7 +65,8 @@ class Auth(object):
         parameter using {@code secretKey} as cipher key.
         :rtype: str
         """
-        sha1_hash = hmac.new(self.secret_key.encode(), data.encode(), sha1)
+        sha1_hash = hmac.new(ensure_binary(self.secret_key),
+                             ensure_binary(data), sha1)
         return binascii.b2a_base64(sha1_hash.digest())[:-1].decode('utf8')
 
     def authentication_headers(self, http_method, query_string, headers=None,

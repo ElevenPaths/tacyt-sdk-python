@@ -41,10 +41,10 @@ class TacytApp(TacytClient):
             outfields=outfields, grouped=grouped)
 
     def create_filter(self, filter):
-        return super(TacytApp, self).create_filter(filter_=filter)
+        return super(TacytApp, self).create_filter(filter)
 
     def update_filter(self, filter):
-        return super(TacytApp, self).update_filter(filter_=filter)
+        return super(TacytApp, self).update_filter(filter)
 
     def list_group_detected_apps(self, page, groupName):
         return super(TacytApp, self).list_group_detected_apps(
