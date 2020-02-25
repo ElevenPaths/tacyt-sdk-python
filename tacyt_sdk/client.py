@@ -45,8 +45,8 @@ class TacytClient(Auth):
         indicating the page of results which have to be retrieved
         :param max_results: A number between 1 and 100 indicating the max
         number of apps which have to be retrieved
-        :param outfields:
-        :param grouped:
+        :param outfields: the set of fields that will return form the api
+        :param grouped: if you want to grouped the same applications
         :return: Json structure with the keys to the Applications found
         """
         result = SearchRequest(query, number_page, max_results,
@@ -103,7 +103,7 @@ class TacytClient(Auth):
 
     def create_filter(self, filter_object):
         """This method create a filter.
-        :param filter_:
+        :param filter_object: A filter object to create
         :return: Response object with the filter structure
         """
         result = FilterRequest(FilterRequest.CREATE_REQUEST, filter_object,
@@ -112,7 +112,7 @@ class TacytClient(Auth):
 
     def update_filter(self, filter_object):
         """This method update changes associates with a filter.
-        :param filter_: Filter structure
+        :param filter_object: Filter structure to update
         """
         result = FilterRequest(FilterRequest.UPDATE_REQUEST, filter_object,
                                0, None)
@@ -235,8 +235,8 @@ class TacytClient(Auth):
 
     def upload_app(self, app_path, tag_name=None):
         """Upload an app file to Tacyt
-        :param tag_name: an optional tag to labeled the uploaded app.
         :param app_path: path to file apk
+        :param tag_name: an optional tag to labeled the uploaded app.
         :return: Response object.
         """
         try:
