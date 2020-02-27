@@ -29,12 +29,12 @@ class Response(object):
         if "error" in content:
             self.error = Error(content["error"])
 
-    @deprecated(version=Version.API_VERSION,
+    @deprecated(version="2.7",
                 reason="You should use directly the attribute")
     def get_error(self):
         return self.error
 
-    @deprecated(version=Version.API_VERSION,
+    @deprecated(version="2.7",
                 reason="You should use directly the attribute")
     def get_data(self):
         return self.data

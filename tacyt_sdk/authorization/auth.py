@@ -65,8 +65,7 @@ class Auth(object):
         parameter using {@code secretKey} as cipher key.
         :rtype: str
         """
-        sha1_hash = hmac.new(ensure_binary(self.secret_key),
-                             ensure_binary(data), sha1)
+        sha1_hash = hmac.new(ensure_binary(self.secret_key), ensure_binary(data), sha1)
         return binascii.b2a_base64(sha1_hash.digest())[:-1].decode('utf8')
 
     def authentication_headers(self, http_method, query_string, headers=None,

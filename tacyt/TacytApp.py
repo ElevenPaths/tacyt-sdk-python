@@ -4,7 +4,7 @@ from tacyt_sdk.client import TacytClient
 from tacyt_sdk.version import Version
 
 
-@deprecated(version=Version.API_VERSION, action="once", reason="You should use TacytClient from the sdk")
+@deprecated(version="2.7", action="once", reason="You should use TacytClient from the sdk")
 class TacytApp(TacytClient):
     """Backward Compatibility with the old interface"""
     API_PROXY = None
