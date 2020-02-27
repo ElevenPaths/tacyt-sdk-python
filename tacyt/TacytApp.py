@@ -114,7 +114,7 @@ class TacytApp(TacytClient):
 
     def uploadURL(self, urls, tagNames=None):
         """Download apps from a market URLs
-        :param urls:  List of urls to upload
+        :param urls: List of urls to upload
         :param tagNames List of tags to identify the application
         :return: Response object
         """

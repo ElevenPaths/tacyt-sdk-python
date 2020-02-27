@@ -44,6 +44,8 @@ class UpdateMarketAppRequest:
     def _to_camel_case(field_name):
         if field_name == "app_url":
             return "appURL"
+        if field_name == "direct_download_url":
+            return "directDownloadURL"
         return to_camel_case(field_name)
 
     def as_dict(self):
