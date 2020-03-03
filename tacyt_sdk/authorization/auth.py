@@ -46,7 +46,8 @@ class Auth(object):
     AUTHORIZATION_HEADER_NAME = "Authorization"
     DATE_HEADER_NAME = X_11PATHS_HEADER_PREFIX + "Date"
 
-    def __init__(self, app_id, secret_key, proxy=None):
+    def __init__(self, app_id, secret_key, api_host=None, api_version=None,
+                 proxy=None):
         """Create an instance of the class with the Application ID and
         secret obtained from Tacyt
         :param app_id: the app id part of your credentials
@@ -54,6 +55,9 @@ class Auth(object):
         """
         self.app_id = app_id
         self.secret_key = secret_key
+        self.api_host = (api_host.replace("https://", "")
+                         if api_host else Version.API_HOST)
+        self.api_version = api_version or Version.API_VERSION
         self.proxy = None
         if proxy:
             self.proxy = {"http": proxy, "https": proxy}
@@ -134,7 +138,7 @@ class Auth(object):
         :type url: str
         :return: A full composed http(s) url to call.
         """
-        return "https://" + Version.API_HOST + url
+        return "https://" + self.api_host + url
 
     def http_get(self, url, headers=None):
         """Perform a get request to the api endpoint
