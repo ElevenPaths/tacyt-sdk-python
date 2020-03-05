@@ -12,30 +12,63 @@ from tacyt_sdk.api_requests.tag_request import TagRequest
 from tacyt_sdk.api_requests.upload_url_request import UploadUrlRequest
 from tacyt_sdk.authorization.auth import Auth
 from tacyt_sdk.filter_model import Filter
-from tacyt_sdk.version import Version
 
 
 logger = logging.getLogger(__name__)
 
 
 class TacytClient(Auth):
-    API_SEARCH_URL = "/api/" + Version.API_VERSION + "/search"
-    API_DETAILS_URL = "/api/" + Version.API_VERSION + "/details"
-    API_FILTERS_URL = "/api/" + Version.API_VERSION + "/filters"
-    API_TAGS_URL = "/api/" + Version.API_VERSION + "/tags"
-    API_COMPARER_URL = "/api/" + Version.API_VERSION + "/compare"
-    API_UPLOAD_URL = "/api/" + Version.API_VERSION + "/upload"
-    API_ENGINE_VERSION_URL = "/api/" + Version.API_VERSION + "/engineVersion"
-    API_UPLOADURL_URL = "/api/" + Version.API_VERSION + "/uploadURL"
-    API_MARKET_URL = "/api/" + Version.API_VERSION + "/app"
-
-    def __init__(self, app_id, secret_key, proxy=None):
+    def __init__(self, app_id, secret_key, api_host=None, api_version=None,
+                 proxy=None):
         """Create an instance of the class with the Application ID and secret
          obtained from Tacyt.
         :param app_id: the app id part of your credentials
         :param secret_key: the secret part of your credentials
         """
-        super(TacytClient, self).__init__(app_id, secret_key, proxy=proxy)
+        super(TacytClient, self).__init__(app_id, secret_key,
+                                          api_host,
+                                          api_version,
+                                          proxy)
+
+    @property
+    def base_url(self):
+        return "/api/" + self.api_version + "/{endpoint}"
+
+    @property
+    def API_SEARCH_URL(self):
+        return self.base_url.format(endpoint="search")
+
+    @property
+    def API_DETAILS_URL(self):
+        return self.base_url.format(endpoint="details")
+
+    @property
+    def API_FILTERS_URL(self):
+        return self.base_url.format(endpoint="filters")
+
+    @property
+    def API_TAGS_URL(self):
+        return self.base_url.format(endpoint="tags")
+
+    @property
+    def API_COMPARER_URL(self):
+        return self.base_url.format(endpoint="compare")
+
+    @property
+    def API_UPLOAD_URL(self):
+        return self.base_url.format(endpoint="upload")
+
+    @property
+    def API_ENGINE_VERSION_URL(self):
+        return self.base_url.format(endpoint="engineVersion")
+
+    @property
+    def API_UPLOADURL_URL(self):
+        return self.base_url.format(endpoint="uploadURL")
+
+    @property
+    def API_MARKET_URL(self):
+        return self.base_url.format(endpoint="app")
 
     def search_apps(self, query, number_page=None, max_results=None,
                     outfields=None, grouped=None):

@@ -9,20 +9,49 @@ class TacytApp(TacytClient):
     """Backward Compatibility with the old interface"""
     API_PROXY = None
     API_PROXY_PORT = None
+    API_HOST = None
+    API_VERSION = None
 
-    def __init__(self, app_id, secret_key, proxy=None):
+    def __init__(self, app_id, secret_key, api_host=None, api_version=None,
+                 proxy=None):
         if self.API_PROXY and self.API_PROXY_PORT:
             proxy = "{}:{}".format(self.API_PROXY, self.API_PROXY_PORT)
-        super(TacytApp, self).__init__(app_id, secret_key, proxy=proxy)
+        api_host = api_host or Version.API_HOST
+        api_version = api_version or Version.API_VERSION
+        super(TacytApp, self).__init__(app_id, secret_key,
+                                       api_host,
+                                       api_version,
+                                       proxy)
+
+    def compose_url(self, url):
+        """Compose the final url with the schema and the host of
+        the api endpoint.
+        :param url: the url path to the endpoint to reach
+        :type url: str
+        :return: A full composed http(s) url to call.
+        """
+        return "https://" + Version.API_HOST + url
+
+    @property
+    def base_url(self):
+        return "/api/" + Version.API_VERSION + "/{endpoint}"
 
     @staticmethod
     def set_host(host):
-        """
-        :param host: The host to be connected with (http://hostname)
-         or (https://hostname)
+        """Set the host to use.
+        NOTE: use the new api_host to set if the object is already created.
+        :param host: The host to be connected with (https://hostname)
         """
         if host.startswith("https://"):
             Version.API_HOST = host[len("https://"):]
+
+    @staticmethod
+    def set_version(version):
+        """Set the version of the api to use.
+        NOTE: use the new api_version to set if the object is already created.
+        :param version: The api version to be used.
+        """
+        Version.API_VERSION = version
 
     @staticmethod
     def set_proxy(proxy, port):
