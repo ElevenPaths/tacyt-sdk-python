@@ -64,7 +64,7 @@ class TacytClient(Auth):
 
     @property
     def API_UPLOADURL_URL(self):
-        return self.base_url.format(endpoint="uploadUrl")
+        return self.base_url.format(endpoint="uploadURL")
 
     @property
     def API_MARKET_URL(self):
