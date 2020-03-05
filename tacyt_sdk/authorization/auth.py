@@ -88,7 +88,7 @@ class Auth(object):
         headers = headers or {}
 
         if body:
-            body_hash = hashlib.sha1(str(body)).hexdigest()
+            body_hash = hashlib.sha1(ensure_binary(body)).hexdigest()
             headers[Auth.BODY_HASH_HEADER_NAME] = body_hash
 
         string_to_sign = "{http_method}\n{utc_date}\n{serialized_headers}" \
