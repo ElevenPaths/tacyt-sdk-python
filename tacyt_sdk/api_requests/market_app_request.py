@@ -5,6 +5,14 @@ Copyright (C) 2015 Eleven Paths
 from tacyt_sdk.utils import to_camel_case
 
 
+def _to_camel_case(field_name):
+    if field_name == "app_url":
+        return "appURL"
+    if field_name == "direct_download_url":
+        return "directDownloadURL"
+    return to_camel_case(field_name)
+
+
 class NewMarketAppRequest(object):
     def __init__(self, unique_origin_id, unique_version_id, platform,
                  origin, title, app_url, **extra_arguments):
@@ -27,7 +35,7 @@ class NewMarketAppRequest(object):
         }
 
         for field_name in self.extra_arguments:
-            camel_case_name = to_camel_case(field_name)
+            camel_case_name = _to_camel_case(field_name)
             data[camel_case_name] = self.extra_arguments[field_name]
         return data
 
@@ -40,14 +48,6 @@ class UpdateMarketAppRequest:
         self.origin = origin
         self.extra_arguments = extra_arguments
 
-    @staticmethod
-    def _to_camel_case(field_name):
-        if field_name == "app_url":
-            return "appURL"
-        if field_name == "direct_download_url":
-            return "directDownloadURL"
-        return to_camel_case(field_name)
-
     def as_dict(self):
         data = {
             "uniqueOriginId": self.unique_origin_id,
@@ -55,6 +55,6 @@ class UpdateMarketAppRequest:
             "origin": self.origin,
         }
         for field_name in self.extra_arguments:
-            camel_case_name = self._to_camel_case(field_name)
+            camel_case_name = _to_camel_case(field_name)
             data[camel_case_name] = self.extra_arguments[field_name]
         return data
