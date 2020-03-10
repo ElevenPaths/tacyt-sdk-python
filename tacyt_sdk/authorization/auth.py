@@ -200,18 +200,21 @@ class Auth(object):
         """
         response = None
         try:
+            json_body = json.dumps(body)
             auth_headers = self.authentication_headers(self.HTTP_METHOD_PUT,
-                                                       url, headers)
+                                                       url,
+                                                       headers,
+                                                       body=json_body)
             api_url = self.compose_url(url)
             res = requests.put(api_url, headers=auth_headers, json=body,
                                proxies=self.proxy)
             response = Response(json_string=res.content)
             res.raise_for_status()
         except requests.HTTPError as e:
-            logger.error(e.message, exc_info=True)
             if not response.error:
                 response.error = Error({"code": res.status_code,
                                         "message": res.content})
+            logger.error(str(response.error), exc_info=True)
         return response
 
     def http_post_file(self, url, headers, file_stream, file_name, data=None):
