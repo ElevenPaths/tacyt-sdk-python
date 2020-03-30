@@ -319,7 +319,7 @@ class TacytClient(Auth):
                               body=upload_data.as_dict())
 
     def add_market_app(self, unique_origin_id, unique_version_id, platform,
-                       origin, title, app_url, **extra_parameters):
+                       origin, title, app_url, find_date, **extra_parameters):
         """Add app to Tacyt from a market.
         :param unique_origin_id: the unique id of the application in the market.
         :param unique_version_id: the unique version of the app in the market.
@@ -327,6 +327,7 @@ class TacytClient(Auth):
         :param origin: the allowed market where the app is coming from.
         :param app_url: the url where the app can be found within market.
         :param title: the title to show in the market.
+        :param find_date: date when the application was found in the market
         Usually the full application name.
         Example: applicationType should be application_type
         :param extra_parameters: a dictionary with extra parameters allowed by
@@ -340,12 +341,13 @@ class TacytClient(Auth):
             origin=origin,
             title=title,
             app_url=app_url,
+            find_date=find_date,
             **extra_parameters)
         return self.http_post(self.API_MARKET_URL, headers=None,
                               body=external_market_app.as_dict())
 
     def update_market_app(self, unique_origin_id, unique_version_id, platform,
-                          origin, title, app_url, **extra_parameters):
+                          origin, title, app_url, find_date, **extra_parameters):
         """Update app to Tacyt from a market.
         :param unique_origin_id: the unique id of the application in the market.
         :param unique_version_id: the unique version of the app in the market.
@@ -353,6 +355,7 @@ class TacytClient(Auth):
         :param origin: the allowed market where the app is coming from.
         :param app_url: the url where the app can be found within market.
         :param title: the title to show in the market.
+        :param find_date: date when the application was found in the market
         Usually the full application name.
         Example: applicationType should be application_type
         :param extra_parameters: a dictionary with extra parameters allowed by
@@ -366,6 +369,7 @@ class TacytClient(Auth):
             origin=origin,
             title=title,
             app_url=app_url,
+            find_date=find_date,
             **extra_parameters)
         return self.http_put(self.API_MARKET_URL, headers=None,
                              body=external_market.as_dict())
