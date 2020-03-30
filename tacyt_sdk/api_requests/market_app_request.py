@@ -10,8 +10,6 @@ def _to_camel_case(field_name):
         return "appURL"
     if field_name == "direct_download_url":
         return "directDownloadURL"
-    if field_name == "find_date":
-        return "findDate"
     return to_camel_case(field_name)
 
 
