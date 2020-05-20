@@ -157,7 +157,7 @@ class Auth(object):
             response = Response(json_string=res.content)
             res.raise_for_status()
         except requests.HTTPError as e:
-            logger.error(e.message, exc_info=True)
+            logger.error(str(e), exc_info=True)
             if not response.error:
                 response.error = Error({"code": res.status_code,
                                         "message": res.content})
@@ -185,7 +185,7 @@ class Auth(object):
             response = Response(json_string=res.content)
             res.raise_for_status()
         except requests.HTTPError as e:
-            logger.error(e.message, exc_info=True)
+            logger.error(str(e), exc_info=True)
             if not response.error:
                 response.error = Error({"code": res.status_code,
                                         "message": res.content})
@@ -239,5 +239,5 @@ class Auth(object):
             response = Response(json_string=res.content)
             res.raise_for_status()
         except requests.HTTPError as e:
-            logger.error(e.message, exc_info=True)
+            logger.error(str(e), exc_info=True)
         return response
