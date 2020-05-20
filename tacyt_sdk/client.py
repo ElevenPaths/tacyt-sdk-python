@@ -266,10 +266,11 @@ class TacytClient(Auth):
         result = CompareRequest(apps, include_details)
         return self.http_post(self.API_COMPARER_URL, body=result.as_dict())
 
-    def upload_app(self, app_path, tag_name=None):
+    def upload_app(self, app_path, tag_name=None, send_to_av_date=None):
         """Upload an app file to Tacyt
         :param app_path: path to file apk
         :param tag_name: an optional tag to labeled the uploaded app.
+        :param send_to_av_date: an optional date to delay sending apps to third party antivirus like Opswat.
         :return: Response object.
         """
         try:
@@ -284,9 +285,10 @@ class TacytClient(Auth):
                     headers,
                     file_stream,
                     file_name,
-                    data={"tagName": tag_name})
+                    data={"tagName": tag_name,
+                          "sendToAVDate": send_to_av_date})
         except IOError as e:
-            logger.error(e.message, exc_info=True)
+            logger.error(str(e), exc_info=True)
             response = None
         return response
 

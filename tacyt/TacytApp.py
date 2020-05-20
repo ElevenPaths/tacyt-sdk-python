@@ -120,14 +120,16 @@ class TacytApp(TacytClient):
         """
         return super(TacytApp, self).get_rss_info(filter_id=filter_id)
 
-    def upload_app(self, apk_file, tagName=None):
+    def upload_app(self, apk_file, tagName=None, send_to_av_date=None):
         """Upload an app file to Tacyt
         :param apk_file: path to file apk
         :param tagName: an optional tag to labeled the uploaded app.
+        :param send_to_av_date: an optional date to delay sending apps to third party antivirus like Opswat.
         :return: Response object.
         """
         return super(TacytApp, self).upload_app(app_path=apk_file,
-                                                tag_name=tagName)
+                                                tag_name=tagName,
+                                                send_to_av_date=send_to_av_date)
 
     def getEngineVersion(self, date=None, engineId=None, lang=None):
         """Search an engine and its associated vulnerabilities.
