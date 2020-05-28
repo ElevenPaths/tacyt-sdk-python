@@ -8,5 +8,5 @@ class Version(object):
     """
     Helper to know witch version of the API of tacyt_sdk should be used
     """
-    API_VERSION = "2.7"
+    API_VERSION = "2.8"
     API_HOST = "tacyt.elevenpaths.com"
