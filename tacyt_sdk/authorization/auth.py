@@ -235,7 +235,7 @@ class Auth(object):
                               'application/octet-stream')}
             api_url = self.compose_url(url)
             res = requests.post(api_url, headers=headers, files=files,
-                                json=data, proxies=self.proxy)
+                                data=data, proxies=self.proxy)
             response = Response(json_string=res.content)
             res.raise_for_status()
         except requests.HTTPError as e:
