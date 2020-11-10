@@ -55,8 +55,7 @@ class Auth(object):
         """
         self.app_id = app_id
         self.secret_key = secret_key
-        self.api_host = (api_host.replace("https://", "")
-                         if api_host else Version.API_HOST)
+        self.api_host = api_host if api_host else Version.API_HOST
         self.api_version = api_version or Version.API_VERSION
         self.proxy = None
         if proxy:
@@ -138,7 +137,7 @@ class Auth(object):
         :type url: str
         :return: A full composed http(s) url to call.
         """
-        return "https://" + self.api_host + url
+        return self.api_host + url
 
     def http_get(self, url, headers=None):
         """Perform a get request to the api endpoint
