@@ -30,7 +30,7 @@ class TacytApp(TacytClient):
         :type url: str
         :return: A full composed http(s) url to call.
         """
-        return "https://" + Version.API_HOST + url
+        return self.api_host + url
 
     @property
     def base_url(self):
@@ -42,8 +42,8 @@ class TacytApp(TacytClient):
         NOTE: use the new api_host to set if the object is already created.
         :param host: The host to be connected with (https://hostname)
         """
-        if host.startswith("https://"):
-            Version.API_HOST = host[len("https://"):]
+        if host.startswith("http"):
+            Version.API_HOST = host
 
     @staticmethod
     def set_version(version):
