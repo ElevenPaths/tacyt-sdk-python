@@ -9,7 +9,7 @@ install_requires = [
 
 
 setup(name='tacytsdk',
-      version='2.9',
+      version='2.10',
       description='Tacyt SDK',
       install_requires=install_requires,
       url='https://github.com/ElevenPaths/tacyt-sdk-python',
